@@ -32,6 +32,7 @@ npm run dev                   # http://localhost:4321
 | Layout system, buttons, links | `src/styles/global.css` |
 | Header, footer, the mark, the hero drawing | `src/components/` |
 | Icons and the LinkedIn share image | `public/` |
+| The ARCH study at `/arch/` (unlisted) — figures, companies, sources | `src/data/arch.ts`; page in `src/pages/arch/`, charts in `src/components/arch/` |
 
 ## Rules this site keeps
 

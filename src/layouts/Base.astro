@@ -18,11 +18,20 @@ interface Props {
   title: string;
   description: string;
   noindex?: boolean;
+  /** Share image path in /public (1200×630). Defaults to the site-wide /og.png. */
+  image?: string;
+  imageAlt?: string;
 }
 
-const { title, description, noindex = false } = Astro.props;
+const {
+  title,
+  description,
+  noindex = false,
+  image = "/og.png",
+  imageAlt = "Azoth & Co. — Operations, rebuilt.",
+} = Astro.props;
 const canonical = new URL(Astro.url.pathname, SITE_URL).href;
-const ogImage = new URL("/og.png", SITE_URL).href;
+const ogImage = new URL(image, SITE_URL).href;
 const isHome = Astro.url.pathname === "/";
 
 const organization = {
@@ -66,7 +75,7 @@ const organizationJson = JSON.stringify(organization).replace(/</g, "\\u003c");
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Azoth & Co. — Operations, rebuilt." />
+    <meta property="og:image:alt" content={imageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />

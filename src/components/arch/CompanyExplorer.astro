@@ -1,0 +1,676 @@
+---
+/**
+ * The published portfolio list (128 companies) as an index you can filter.
+ * Every figure above the index is also a filter: status tiles, area bars, location bars.
+ * Selecting a company opens its record — built in the browser from data attributes, so the page
+ * carries the data once. Without JavaScript the index, counts and legend still read in full.
+ */
+import { areas, areaCounts, companies, hubCounts, hubOf, statusCounts, statusLabel, fmtDate, refNo, type Status } from "../../data/arch";
+
+const areaName = Object.fromEntries(areas.map((a) => [a.id, a.name]));
+const total = companies.length;
+const maxArea = Math.max(...areaCounts.map((a) => a.count));
+const hubs = hubCounts.filter((h) => h.hub !== "Not listed");
+const unlisted = hubCounts.find((h) => h.hub === "Not listed")?.count ?? 0;
+const maxHub = Math.max(...hubs.map((h) => h.count));
+const statuses: [Status, number][] = [
+  ["public", statusCounts.public],
+  ["private", statusCounts.private],
+  ["acquired", statusCounts.acquired],
+  ["closed", statusCounts.closed],
+];
+const groups = areas.map((a) => ({ ...a, items: companies.filter((c) => c.area === a.id) }));
+
+const statusLine = (c: (typeof companies)[number]) =>
+  [statusLabel[c.status], c.ticker, c.exit].filter(Boolean).join(" · ");
+const changeLine = (c: (typeof companies)[number]) =>
+  c.change ? `${c.change.was} → ${c.change.now} (${fmtDate(c.change.date)})` : "";
+---
+
+<div class="explorer" data-explorer>
+  <div class="explorer__controls">
+    <div class="kpis" role="group" aria-label="Filter the index by status">
+      {
+        statuses.map(([s, n]) => (
+          <button type="button" class="kpi" data-filter="status" data-value={s} aria-pressed="false">
+            <span class="kpi__value">{n}</span>
+            <span class="kpi__label label">
+              <span class="g" data-s={s} aria-hidden="true" />
+              {statusLabel[s]}
+            </span>
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="dists">
+      <div class="dist" role="group" aria-labelledby="dist-area">
+        <p id="dist-area" class="label dist__title">By area</p>
+        <ul role="list">
+          {
+            areaCounts.map((a) => (
+              <li>
+                <button
+                  type="button"
+                  class="bar"
+                  data-filter="area"
+                  data-value={a.id}
+                  aria-pressed="false"
+                  style={`--w: ${((a.count / maxArea) * 100).toFixed(1)}%`}
+                >
+                  <span class="bar__label">{a.name}</span>
+                  <span class="bar__track" aria-hidden="true">
+                    <span class="bar__fill" />
+                  </span>
+                  <span class="bar__n">{a.count}</span>
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="dist__note muted">Areas are our classification. Each company is counted once.</p>
+      </div>
+
+      <div class="dist" role="group" aria-labelledby="dist-hub">
+        <p id="dist-hub" class="label dist__title">By location</p>
+        <ul role="list">
+          {
+            hubs.map((h) => (
+              <li>
+                <button
+                  type="button"
+                  class="bar"
+                  data-filter="hub"
+                  data-value={h.hub}
+                  aria-pressed="false"
+                  style={`--w: ${((h.count / maxHub) * 100).toFixed(1)}%`}
+                >
+                  <span class="bar__label">{h.hub}</span>
+                  <span class="bar__track" aria-hidden="true">
+                    <span class="bar__fill" />
+                  </span>
+                  <span class="bar__n">{h.count}</span>
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="dist__note muted">Primary city as listed. {unlisted} listings give no city.</p>
+      </div>
+    </div>
+
+    <div class="explorer__bar">
+      <p class="explorer__count label" data-count aria-live="polite">Showing all {total}</p>
+      <button type="button" class="explorer__clear label" data-clear hidden>Clear filters</button>
+      <ul class="legend label" role="list" aria-label="Key">
+        <li><span class="g" data-s="public" aria-hidden="true" />Public</li>
+        <li><span class="g" data-s="private" aria-hidden="true" />Private</li>
+        <li><span class="g" data-s="acquired" aria-hidden="true" />Acquired</li>
+        <li><span class="g" data-s="closed" aria-hidden="true" />Wound down</li>
+        <li><span class="legend__changed" aria-hidden="true">Aa</span>Updated from a newer source</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="explorer__body">
+    <div class="index">
+      {
+        groups.map((g) => (
+          <section class="index__group" data-group={g.id} aria-labelledby={`grp-${g.id}`}>
+            <h3 class="index__title label" id={`grp-${g.id}`}>
+              {g.name} <span class="index__n">{g.items.length}</span>
+            </h3>
+            <ul class="index__list" role="list">
+              {g.items.map((c) => (
+                <li>
+                  <button
+                    type="button"
+                    class:list={["co", { "co--changed": c.change }]}
+                    aria-controls="co-panel"
+                    data-co
+                    data-status={c.status}
+                    data-area={c.area}
+                    data-hub={hubOf(c.city)}
+                    data-name={c.name}
+                    data-area-name={areaName[c.area]}
+                    data-what={c.what}
+                    data-city={c.city || "Not given on the list"}
+                    data-sl={statusLine(c)}
+                    data-chg={changeLine(c)}
+                    data-src={c.src.map(refNo).join(",")}
+                  >
+                    <span class="g" data-s={c.status} aria-hidden="true" />
+                    <span class="co__name">{c.name}</span>
+                    <span class="visually-hidden">
+                      , {statusLabel[c.status]}
+                      {c.change ? ", updated" : ""}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+
+    <aside class="panel" id="co-panel" aria-label="Company record" data-panel>
+      <div class="panel__body" data-panel-body aria-live="polite">
+        <p class="label">Company record</p>
+        <p class="panel__empty muted">
+          Select a company to see its record: area, location, status, and the sources behind each field.
+        </p>
+      </div>
+      <button type="button" class="panel__close label" data-close>Close</button>
+    </aside>
+  </div>
+</div>
+
+<script is:inline>
+  (() => {
+    const root = document.querySelector("[data-explorer]");
+    if (!root) return;
+    const items = [...root.querySelectorAll("[data-co]")];
+    const groups = [...root.querySelectorAll("[data-group]")];
+    const controls = [...root.querySelectorAll("[data-filter]")];
+    const count = root.querySelector("[data-count]");
+    const clear = root.querySelector("[data-clear]");
+    const panel = root.querySelector("[data-panel]");
+    const body = root.querySelector("[data-panel-body]");
+    const sheet = matchMedia("(max-width: 63.99em)");
+    const state = { status: "", area: "", hub: "" };
+    let current = null;
+
+    const el = (tag, cls, text) => {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text) n.textContent = text;
+      return n;
+    };
+
+    const apply = () => {
+      let shown = 0;
+      for (const b of items) {
+        const ok = Object.keys(state).every((k) => !state[k] || b.dataset[k] === state[k]);
+        b.parentElement.hidden = !ok;
+        if (ok) shown++;
+      }
+      for (const g of groups) {
+        const visible = g.querySelectorAll("li:not([hidden])").length;
+        g.hidden = visible === 0;
+        g.querySelector(".index__n").textContent = visible;
+      }
+      for (const c of controls) c.setAttribute("aria-pressed", String(state[c.dataset.filter] === c.dataset.value));
+      count.textContent = shown === items.length ? `Showing all ${shown}` : `Showing ${shown} of ${items.length}`;
+      clear.hidden = !Object.values(state).some(Boolean);
+    };
+
+    const fact = (term, value) => {
+      const row = el("div", "panel__fact");
+      row.append(el("dt", "label", term), el("dd", "", value));
+      return row;
+    };
+
+    const open = (b) => {
+      if (current) current.removeAttribute("aria-current");
+      current = b;
+      b.setAttribute("aria-current", "true");
+      const d = b.dataset;
+      const name = el("h3", "panel__name", d.name);
+      name.tabIndex = -1;
+      const facts = el("dl", "panel__facts");
+      facts.append(fact("Status", d.sl), fact("Primary city", d.city));
+      if (d.chg) facts.append(fact("Record change", d.chg));
+      const src = el("dd", "panel__sources");
+      for (const n of d.src.split(",")) {
+        const entry = document.getElementById(`src-${n}`);
+        const link = entry && entry.querySelector("a[href^='http']");
+        const a = el("a", "text-link", entry ? `${n}. ${entry.dataset.publisher}` : `Source ${n}`);
+        a.href = link ? link.href : `#src-${n}`;
+        if (link) a.rel = "noopener";
+        src.append(a);
+      }
+      const srcRow = el("div", "panel__fact");
+      srcRow.append(el("dt", "label", "Sources"), src);
+      facts.append(srcRow);
+      body.replaceChildren(el("p", "label", d.areaName), name, el("p", "panel__what", d.what), facts);
+      if (sheet.matches) {
+        panel.classList.add("is-open");
+        name.focus({ preventScroll: true });
+      }
+    };
+
+    const close = () => {
+      panel.classList.remove("is-open");
+      if (current) current.focus({ preventScroll: true });
+    };
+
+    root.addEventListener("click", (e) => {
+      const f = e.target.closest("[data-filter]");
+      if (f) {
+        const k = f.dataset.filter;
+        state[k] = state[k] === f.dataset.value ? "" : f.dataset.value;
+        return apply();
+      }
+      if (e.target.closest("[data-clear]")) {
+        state.status = state.area = state.hub = "";
+        return apply();
+      }
+      if (e.target.closest("[data-close]")) return close();
+      const b = e.target.closest("[data-co]");
+      if (b) open(b);
+    });
+
+    root.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && panel.classList.contains("is-open")) close();
+    });
+  })();
+</script>
+
+<style>
+  /* ---------- Status glyphs: shape carries meaning, never color alone ---------- */
+  .g {
+    display: inline-block;
+    flex: none;
+    width: 8px;
+    height: 8px;
+  }
+
+  .g[data-s="public"] {
+    border-radius: 50%;
+    background: var(--bone);
+  }
+
+  .g[data-s="private"] {
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px var(--ash);
+  }
+
+  .g[data-s="acquired"] {
+    width: 7px;
+    height: 7px;
+    margin-inline: 0.5px;
+    transform: rotate(45deg);
+    box-shadow: inset 0 0 0 1px var(--gold);
+  }
+
+  .g[data-s="closed"] {
+    height: 1px;
+    background: var(--ash);
+  }
+
+  /* ---------- Status tiles ---------- */
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--rule);
+  }
+
+  .kpi {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 1.25rem 1rem 1.35rem 0;
+    border: 0;
+    border-bottom: 1px solid var(--rule-faint);
+    background: none;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .kpi__value {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 2rem + 2vw, 3.75rem);
+    font-weight: 300;
+    line-height: 0.95;
+    transition: color 0.2s var(--ease);
+  }
+
+  .kpi__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+
+  .kpi:hover .kpi__value,
+  .kpi[aria-pressed="true"] .kpi__value {
+    color: var(--gold);
+  }
+
+  .kpi[aria-pressed="true"] {
+    box-shadow: inset 0 -1px 0 var(--gold);
+  }
+
+  @media (min-width: 48em) {
+    .kpis {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  /* ---------- Distribution bars (also filters) ---------- */
+  .dists {
+    display: grid;
+    gap: 2.75rem;
+    margin-top: 2.75rem;
+  }
+
+  .dist__title {
+    margin-bottom: 0.75rem;
+  }
+
+  .dist ul {
+    border-top: 1px solid var(--rule);
+  }
+
+  .bar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(4rem, 34%) 2rem;
+    align-items: center;
+    gap: 0.9rem;
+    width: 100%;
+    min-height: 2.6rem;
+    padding: 0.35rem 0;
+    border: 0;
+    border-bottom: 1px solid var(--rule-faint);
+    background: none;
+    color: var(--bone);
+    font-size: 0.9375rem;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .bar__label {
+    transition: color 0.2s var(--ease);
+  }
+
+  .bar__track {
+    position: relative;
+    height: 1rem;
+  }
+
+  .bar__fill {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: var(--w);
+    height: 2px;
+    background: var(--ash);
+    transform: translateY(-50%);
+    transition: background-color 0.2s var(--ease);
+  }
+
+  .bar__fill::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: inherit;
+    box-shadow: 0 0 0 2px var(--obsidian);
+    transform: translateY(-50%);
+  }
+
+  .bar__n {
+    justify-self: end;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .bar:hover .bar__label,
+  .bar[aria-pressed="true"] .bar__label {
+    color: var(--gold);
+  }
+
+  .bar:hover .bar__fill,
+  .bar[aria-pressed="true"] .bar__fill {
+    background: var(--gold);
+  }
+
+  .dist__note {
+    margin-top: 0.85rem;
+    font-size: 0.8125rem;
+  }
+
+  @media (min-width: 64em) {
+    .dists {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+    }
+  }
+
+  /* ---------- Count, clear, legend ---------- */
+  .explorer__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    margin-top: 3rem;
+    padding-block: 1rem;
+    border-block: 1px solid var(--rule);
+  }
+
+  .explorer__count {
+    color: var(--bone);
+  }
+
+  .explorer__clear {
+    min-height: 2.75rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--gold);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
+  }
+
+  .explorer__clear[hidden] {
+    display: none;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    margin-left: auto;
+  }
+
+  .legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .legend__changed {
+    color: var(--bone);
+    font-family: var(--font-body);
+    letter-spacing: 0;
+    text-transform: none;
+    text-decoration: underline 1px var(--gold);
+    text-underline-offset: 0.25em;
+  }
+
+  /* ---------- Index + record panel ---------- */
+  .explorer__body {
+    display: grid;
+    gap: var(--col-gap);
+    margin-top: 2.5rem;
+  }
+
+  .index {
+    display: flex;
+    flex-direction: column;
+    gap: 2.25rem;
+    min-width: 0;
+  }
+
+  .index__group[hidden] {
+    display: none;
+  }
+
+  .index__title {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .index__n {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .index__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1rem;
+    padding-top: 0.4rem;
+  }
+
+  @media (min-width: 40em) {
+    .index__list {
+      grid-template-columns: repeat(auto-fill, minmax(12.25rem, 1fr));
+      column-gap: var(--col-gap);
+    }
+  }
+
+  .co {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    min-height: 2.5rem;
+    padding: 0.3rem 0;
+    border: 0;
+    background: none;
+    color: var(--bone);
+    font-size: 0.9375rem;
+    line-height: 1.3;
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.2s var(--ease);
+  }
+
+  .co:hover,
+  .co[aria-current="true"] {
+    color: var(--gold);
+  }
+
+  .co--changed .co__name {
+    text-decoration: underline 1px var(--gold);
+    text-underline-offset: 0.25em;
+  }
+
+  /* Phones: the record opens as a sheet from the bottom of the screen */
+  .panel {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 90;
+    max-height: min(70vh, 34rem);
+    overflow-y: auto;
+    padding: 1.5rem var(--gutter) 1.25rem;
+    border-top: 1px solid var(--gold);
+    background: var(--ink);
+    transform: translateY(105%);
+    visibility: hidden;
+    transition:
+      transform 0.35s var(--ease),
+      visibility 0s linear 0.35s;
+  }
+
+  .panel.is-open {
+    transform: none;
+    visibility: visible;
+    transition: transform 0.35s var(--ease);
+  }
+
+  .panel__close {
+    min-height: 2.75rem;
+    margin-top: 1rem;
+    padding: 0 1.1rem;
+    border: 1px solid var(--gold);
+    background: none;
+    color: var(--bone);
+    cursor: pointer;
+  }
+
+  .panel :global(.panel__name) {
+    margin-top: 0.6rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.625rem, 1.4rem + 0.8vw, 2.125rem);
+    line-height: 1.1;
+  }
+
+  .panel :global(.panel__name:focus) {
+    outline: none;
+  }
+
+  .panel :global(.panel__what) {
+    margin-top: 0.6rem;
+    color: var(--ash);
+  }
+
+  .panel__empty {
+    margin-top: 0.75rem;
+    font-size: 0.9375rem;
+  }
+
+  .panel :global(.panel__facts) {
+    margin-top: 1.25rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .panel :global(.panel__fact) {
+    display: grid;
+    gap: 0.25rem;
+    padding-block: 0.75rem;
+    border-bottom: 1px solid var(--rule-faint);
+    font-size: 0.9375rem;
+  }
+
+  .panel :global(.panel__sources) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .panel,
+    .panel.is-open {
+      transition: none;
+    }
+  }
+
+  @media (min-width: 64em) {
+    .explorer__body {
+      grid-template-columns: minmax(0, 1fr) minmax(15rem, 18rem);
+      align-items: start;
+    }
+
+    .panel {
+      position: sticky;
+      inset: auto;
+      top: 2.5rem;
+      z-index: auto;
+      max-height: none;
+      overflow: visible;
+      padding: 1.5rem 0 0 1.5rem;
+      border-top: 0;
+      border-left: 1px solid var(--rule);
+      background: none;
+      transform: none;
+      visibility: visible;
+      transition: none;
+    }
+
+    .panel__close {
+      display: none;
+    }
+  }
+</style>

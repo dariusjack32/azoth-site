@@ -1,0 +1,47 @@
+---
+/** Footnote marker: one or more source numbers, each linking to its entry in the Sources list. */
+import { refNo } from "../../data/arch";
+
+interface Props {
+  ids: string | string[];
+}
+
+const list = [...new Set((Array.isArray(Astro.props.ids) ? Astro.props.ids : [Astro.props.ids]).map(refNo))].sort(
+  (a, b) => a - b,
+);
+---
+
+<sup class="ref"
+  >{
+    list.map((n, i) => (
+      <>
+        {i > 0 && <span aria-hidden="true">,</span>}
+        <a href={`#src-${n}`} aria-label={`Source ${n}`}>{n}</a>
+      </>
+    ))
+  }</sup
+>
+
+<style>
+  .ref {
+    margin-left: 0.08em;
+    color: var(--ash);
+    font-family: var(--font-mono);
+    font-size: 0.62em;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: 0;
+    line-height: 0;
+    vertical-align: super;
+    white-space: nowrap;
+  }
+
+  .ref a {
+    padding-inline: 0.06em;
+    transition: color 0.2s var(--ease);
+  }
+
+  .ref a:hover {
+    color: var(--gold);
+  }
+</style>

@@ -1,0 +1,420 @@
+---
+/**
+ * /arch/ — an independent study of ARCH Venture Partners, built only from public sources.
+ *
+ * Unlisted on purpose: noindex, out of the sitemap, not in the nav. It exists to be sent, and it is the
+ * one deliberate exception to "never name a prospective client" (see CLAUDE.md). Every figure comes
+ * from src/data/arch.ts, and every entry there cites a source.
+ */
+import Base from "../../layouts/Base.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import Section from "../../components/Section.astro";
+import ClosingCTA from "../../components/ClosingCTA.astro";
+import Ref from "../../components/arch/Ref.astro";
+import FundChart from "../../components/arch/FundChart.astro";
+import CompanyExplorer from "../../components/arch/CompanyExplorer.astro";
+import ExitChart from "../../components/arch/ExitChart.astro";
+import SignalBrief from "../../components/arch/SignalBrief.astro";
+import Drift from "../../components/arch/Drift.astro";
+import Pipeline from "../../components/arch/Pipeline.astro";
+import {
+  AS_OF_LABEL,
+  changeLog,
+  exits,
+  firm,
+  fmtDate,
+  ipos2026,
+  ipoTotalM,
+  raisedFundCount,
+  raisedM,
+  record,
+  sources,
+  spell,
+} from "../../data/arch";
+import { EMAIL } from "../../config";
+
+const raised = `$${Math.floor(raisedM / 100) / 10}B+`;
+const firstExitYear = exits[0].date.slice(0, 4);
+const bigDeals = exits.filter((e) => (e.valueB ?? 0) >= 7).length;
+const ipoBillions = (ipoTotalM / 1000).toFixed(1);
+
+const figures = [
+  { value: String(changeLog.length), label: "Facts on ARCH’s published portfolio list that newer public sources contradict", href: "#stakes" },
+  { value: String(firm.listCount), label: "Companies on that list, each checked against filings and announcements", src: firm.listSrc },
+  { value: raised, label: `Committed across the ${raisedFundCount} closed funds with published sizes`, href: "#capital" },
+  { value: "1 day", label: `To rebuild the public record from ${sources.length} sources, with a person checking each change` },
+];
+
+const counts = [
+  { n: sources.length, label: "Public sources" },
+  { n: record.length, label: "Company records" },
+  { n: changeLog.length, label: "Corrections to the published list" },
+  { n: 1, label: "Working day" },
+];
+
+const toc = [
+  ["#stakes", "Stakes"],
+  ["#method", "Method"],
+  ["#capital", "Capital"],
+  ["#companies", "Companies"],
+  ["#outcomes", "Outcomes"],
+  ["#signals", "Signals"],
+  ["#system", "System"],
+  ["#sources", "Sources"],
+];
+---
+
+<Base
+  title="What a stale fact costs — Azoth & Co."
+  description="ARCH Venture Partners’ published portfolio list is out of date in ten places. We rebuilt the public record in a day, from cited sources, to show what the fix looks like."
+  noindex
+  image="/og-arch.png"
+  imageAlt="What a stale fact costs. An independent study of ARCH Venture Partners by Azoth & Co."
+>
+  <PageHeader
+    label="Study · Public record"
+    title="What a stale fact costs."
+    sub="ARCH Venture Partners’ published portfolio list is out of date in ten places. We found them in a day, from public sources. The same drift inside a firm lands in LP reports, board materials and valuation marks."
+  >
+    <p class="study-note label">
+      Independent study by Azoth &amp; Co. · As of {AS_OF_LABEL} · Not affiliated with or endorsed by ARCH Venture
+      Partners
+    </p>
+
+    <dl class="figures">
+      {
+        figures.map((f, i) => (
+          <div class="figure" data-reveal style={`--i: ${i}`}>
+            <dt class="figure__label">
+              {f.label}
+              {f.src && <Ref ids={f.src} />}
+            </dt>
+            <dd class="figure__value">{f.href ? <a href={f.href}>{f.value}</a> : f.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <nav class="toc" aria-label="On this page">
+      <ol role="list">
+        {
+          toc.map(([href, label], i) => (
+            <li>
+              <a href={href}>
+                <span class="toc__n">{String(i + 1).padStart(2, "0")}</span>
+                {label}
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+  </PageHeader>
+
+  <Section id="stakes" label="01 · Stakes">
+    <h2 class="h-section" data-reveal>Ten facts on ARCH’s own list have moved.</h2>
+    <p class="lede" data-reveal style="--i: 1">
+      We checked all {firm.listCount} companies on ARCH’s portfolio page<Ref ids="portfolio" /> against filings and
+      announcements. Ten entries are behind: four companies that listed on Nasdaq this year, one acquired, one taken private,
+      one wound down, one renamed, and two ARCH-backed companies that don’t appear at all.
+    </p>
+    <Drift />
+  </Section>
+
+  <Section id="method" label="02 · Method">
+    <h2 class="h-section" data-reveal>One record. Every fact cited. One day.</h2>
+    <p class="lede" data-reveal style="--i: 1">
+      Fund sizes sit in press releases. Companies sit on a portfolio page. Exits sit in SEC filings. We pulled them into one
+      record, tied each fact to its source and date, and kept the newest dated fact wherever two sources disagreed. One person
+      did it in a working day with a system doing the collecting. A person still checked every change.
+    </p>
+    <ul class="counts" role="list">
+      {
+        counts.map((c, i) => (
+          <li class="count" data-reveal style={`--i: ${i}`}>
+            <span class="count__n">{c.n}</span>
+            <span class="count__label label">{c.label}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section id="capital" label="03 · Capital">
+    <h2 class="h-section" data-reveal>From $9 million to $3 billion a fund.</h2>
+    <p class="lede" data-reveal style="--i: 1">
+      ARCH’s first fund raised about $9 million in 1989.<Ref ids="gv2014" /> Fund XIII closed at more than $3 billion in 2024.<Ref
+        ids="arch2024"
+      /> In August 2026 a Form D showed Fund XIV targeting $3 billion.<Ref ids={["fund14", "fund14b"]} />
+    </p>
+    <FundChart />
+  </Section>
+
+  <Section id="companies" label="04 · Companies">
+    <h2 class="h-section" data-reveal>{firm.listCount} companies, sorted by what they do.</h2>
+    <p class="lede" data-reveal style="--i: 1">
+      ARCH lists {firm.listCount} companies on its portfolio page.<Ref ids="portfolio" /> We gave each one a primary area,
+      based on its own description, and checked its status against filings and announcements. Select any figure to filter the
+      index. Select a company to open its record.
+    </p>
+    <CompanyExplorer />
+  </Section>
+
+  <Section id="outcomes" label="05 · Outcomes">
+    <h2 class="h-section" data-reveal>
+      {spell(exits.length, true)} acquisitions. {spell(ipos2026.length, true)} listings this year.
+    </h2>
+    <p class="lede" data-reveal style="--i: 1">
+      Since {firstExitYear}, buyers have announced deals for {exits.length} ARCH-backed companies. {spell(bigDeals, true)} carried
+      headline values of $7 billion or more. This year {spell(ipos2026.length)} portfolio companies listed on Nasdaq and raised
+      about ${ipoBillions} billion between them.
+    </p>
+    <ExitChart />
+  </Section>
+
+  <Section id="signals" label="06 · Signals">
+    <h2 class="h-section" data-reveal>What the partners would have read on Monday.</h2>
+    <p class="lede" data-reveal style="--i: 1">
+      Seven events across seven companies in twelve weeks, each one a fact that has to reach a partner, an LP report and the
+      website before someone else mentions it. This is the brief a system would have sent, from public sources alone. Inside
+      a firm, it also reads the private record.
+    </p>
+    <SignalBrief />
+  </Section>
+
+  <Section id="system" label="07 · System">
+    <h2 class="h-section" data-reveal>How it runs.</h2>
+    <p class="lede" data-reveal style="--i: 1">
+      This page was assembled from the sources below on {AS_OF_LABEL}. Inside a firm, the same pipeline runs on a schedule,
+      and a person signs off before anything goes out.
+    </p>
+    <Pipeline />
+  </Section>
+
+  <Section id="next" label="08 · Next">
+    <h2 class="h-section" data-reveal>The public record is the easy part.</h2>
+    <p class="statement" data-reveal style="--i: 1">
+      A stale fact on a website is embarrassing. The same fact in an LP letter is a question you can’t answer in the
+      meeting. Inside a firm, this method runs on capital calls, LP reporting, board materials and portfolio metrics, with a
+      person signing off before anything goes out.
+    </p>
+    <p class="body-copy muted" data-reveal style="--i: 2">
+      We start with an Assay: two to four weeks, a fixed fee, and a ranked list of where your record drifts and what each
+      drift costs.
+    </p>
+    <div data-reveal style="--i: 3">
+      <a class="link" href="/services/">How we work <span aria-hidden="true">→</span></a>
+    </div>
+  </Section>
+
+  <Section id="sources" label="Sources">
+    <h2 class="h-section">{sources.length} sources, all public.</h2>
+    <p class="body-copy muted">
+      Retrieved and checked on {AS_OF_LABEL}. Where a source carries no reliable date, it is marked undated.
+    </p>
+    <div class="download">
+      <a class="link" href="/arch/record.csv" download>Download the full record <span aria-hidden="true">↓</span></a>
+      <p class="download__meta label">CSV · {record.length} rows · every row with its sources</p>
+    </div>
+    <ol class="sources" role="list">
+      {
+        sources.map((s, i) => (
+          <li class="source" id={`src-${i + 1}`} data-publisher={s.publisher}>
+            <span class="source__n">{i + 1}</span>
+            <span class="source__text">
+              <span class="source__publisher">{s.publisher}.</span>{" "}
+              <a class="text-link" href={s.url} rel="noopener">
+                {s.title}
+              </a>
+              <span class="source__date">· {fmtDate(s.date)}</span>
+            </span>
+          </li>
+        ))
+      }
+    </ol>
+    <p class="disclaimer muted">
+      Azoth &amp; Co. prepared this study independently, from public information available on {AS_OF_LABEL}. ARCH Venture
+      Partners did not take part in it, review it or endorse it. It is not investment advice. Company names belong to their
+      owners. Corrections are welcome at <a class="text-link" href={`mailto:${EMAIL}`}>{EMAIL}</a>.
+    </p>
+  </Section>
+
+  <ClosingCTA />
+</Base>
+
+<style>
+  .study-note {
+    max-width: 60ch;
+    color: var(--ash);
+    line-height: 1.7;
+  }
+
+  /* ---------- Headline figures ---------- */
+  .figures {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    border-top: 1px solid var(--rule);
+  }
+
+  .figure {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    padding: 1.25rem 0 1.5rem;
+    border-bottom: 1px solid var(--rule-faint);
+  }
+
+  .figure__value {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 1.9rem + 2.4vw, 4.25rem);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+  }
+
+  .figure__value a {
+    transition: color 0.2s var(--ease);
+  }
+
+  .figure__value a:hover {
+    color: var(--gold);
+  }
+
+  .figure__label {
+    max-width: 24ch;
+    color: var(--ash);
+    font-size: 0.875rem;
+    line-height: 1.45;
+  }
+
+  @media (min-width: 64em) {
+    .figures {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  /* ---------- On this page ---------- */
+  .toc ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.5rem;
+  }
+
+  .toc a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    color: var(--ash);
+    font-family: var(--font-mono);
+    font-size: var(--label-size);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    transition: color 0.2s var(--ease);
+  }
+
+  .toc a:hover {
+    color: var(--gold);
+  }
+
+  .toc__n {
+    color: var(--gold);
+  }
+
+  /* ---------- Method counts ---------- */
+  .counts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    border-top: 1px solid var(--rule);
+  }
+
+  .count {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.25rem 0 1.4rem;
+    border-bottom: 1px solid var(--rule-faint);
+  }
+
+  .count__n {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 1.9rem + 1.4vw, 3.25rem);
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  @media (min-width: 64em) {
+    .counts {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  /* ---------- Sources ---------- */
+  .download {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.25rem;
+  }
+
+  .sources {
+    border-top: 1px solid var(--rule);
+  }
+
+  @media (min-width: 64em) {
+    .sources {
+      columns: 2;
+      column-gap: var(--col-gap);
+    }
+  }
+
+  .source {
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    gap: 0.5rem;
+    padding-block: 0.6rem;
+    border-bottom: 1px solid var(--rule-faint);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    break-inside: avoid;
+    scroll-margin-top: 2rem;
+  }
+
+  .source:target {
+    box-shadow: inset 2px 0 0 var(--gold);
+  }
+
+  .source__n {
+    padding-left: 0.5rem;
+    color: var(--gold);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.9;
+  }
+
+  .source__text {
+    overflow-wrap: anywhere;
+  }
+
+  .source__publisher {
+    color: var(--ash);
+  }
+
+  .source__date {
+    margin-left: 0.35em;
+    color: var(--ash);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  .disclaimer {
+    max-width: 66ch;
+    font-size: 0.875rem;
+  }
+</style>
