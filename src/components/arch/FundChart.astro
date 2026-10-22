@@ -1,0 +1,221 @@
+---
+/**
+ * Fund sizes, I through XIV, as a ledger with a hairline bar per fund.
+ * One series, one scale ($0–3B). Fund XIII (latest closed) is emphasized; Fund XIV is a target, drawn dashed.
+ * The list items carry the full text, so the chart reads the same without the bars.
+ */
+import { funds, raisedM, raisedFundCount } from "../../data/arch";
+import Ref from "./Ref.astro";
+
+// The largest fund fills 96% of the track, so its end dot never touches the value column.
+const MAX = 3000 / 0.96;
+const raisedLabel = `$${Math.floor(raisedM / 100) / 10}B+`;
+---
+
+<figure class="funds" aria-labelledby="funds-caption">
+  <ol class="funds__list" role="list" data-reveal>
+    {
+      funds.map((f, i) => {
+        const pct = f.sizeM ? Math.max((f.sizeM / MAX) * 100, 0.8) : 0;
+        return (
+          <li
+            class:list={["fund", `fund--${f.kind}`, { "fund--latest": f.numeral === "XIII" }]}
+            style={`--w: ${pct.toFixed(2)}%; --i: ${i}`}
+          >
+            <span class="fund__name">
+              <span class="visually-hidden">Fund </span>
+              <span class="fund__numeral">{f.numeral}</span>
+              <span class="fund__year">
+                <span class="visually-hidden">, </span>
+                {f.year ?? "—"}
+              </span>
+            </span>
+            <span class="fund__track" aria-hidden="true">
+              {f.sizeM !== null && <span class="fund__bar" />}
+            </span>
+            <span class="fund__value">
+              {f.kind === "unknown" ? <span class="visually-hidden">Size not published</span> : f.label}
+              {f.kind === "unknown" && <span aria-hidden="true">—</span>}
+              {f.src.length > 0 && <Ref ids={f.src} />}
+            </span>
+            {f.note && <span class="fund__note">{f.note}</span>}
+          </li>
+        );
+      })
+    }
+  </ol>
+  <figcaption id="funds-caption" class="funds__caption">
+    <span class="funds__total"
+      ><strong>{raisedLabel}</strong> committed across the {raisedFundCount} closed funds with published sizes.</span
+    >
+    <span class="muted"
+      >Sizes as announced. Funds VIII to X are reported with their overage funds. Funds II and III are left blank: we
+      found no reliable public figure, and we don’t estimate.</span
+    >
+  </figcaption>
+</figure>
+
+<style>
+  .funds__list {
+    border-top: 1px solid var(--rule);
+  }
+
+  .fund {
+    display: grid;
+    grid-template-columns: 4.25rem minmax(0, 1fr) 7.75rem;
+    grid-template-areas:
+      "name track value"
+      ". note note";
+    align-items: center;
+    column-gap: 1rem;
+    padding-block: 0.7rem;
+    border-bottom: 1px solid var(--rule-faint);
+  }
+
+  .fund__name {
+    grid-area: name;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+  }
+
+  .fund__numeral {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 400;
+  }
+
+  .fund__year {
+    color: var(--ash);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+  }
+
+  .fund__track {
+    grid-area: track;
+    position: relative;
+    height: 1.25rem;
+  }
+
+  /* Recessive baseline the bars grow along */
+  .fund__track::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--rule-faint);
+  }
+
+  .fund__bar {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: var(--w);
+    height: 2px;
+    background: var(--bone);
+    transform: translateY(-50%);
+  }
+
+  /* End dot with a surface ring */
+  .fund__bar::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--bone);
+    box-shadow: 0 0 0 2px var(--obsidian);
+    transform: translateY(-50%);
+  }
+
+  .fund--latest .fund__bar,
+  .fund--latest .fund__bar::after {
+    background: var(--gold);
+  }
+
+  .fund--latest .fund__numeral {
+    color: var(--gold);
+  }
+
+  /* Fund XIV is a filing target, not a close: dashed, hollow end */
+  .fund--target .fund__bar {
+    background: repeating-linear-gradient(90deg, var(--gold) 0 5px, transparent 5px 9px);
+  }
+
+  .fund--target .fund__bar::after {
+    background: var(--obsidian);
+    box-shadow: inset 0 0 0 1.5px var(--gold);
+  }
+
+  .fund--unknown .fund__numeral,
+  .fund--unknown .fund__value {
+    color: var(--ash);
+  }
+
+  .fund__value {
+    grid-area: value;
+    justify-self: end;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  .fund__note {
+    grid-area: note;
+    color: var(--ash);
+    font-size: 0.8125rem;
+    line-height: 1.4;
+  }
+
+  .funds__caption {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    max-width: 62ch;
+    margin-top: 1.5rem;
+    font-size: 0.9375rem;
+  }
+
+  .funds__total strong {
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  @media (min-width: 48em) {
+    .fund {
+      grid-template-columns: 6.5rem minmax(0, 1fr) 9rem 13rem;
+      grid-template-areas: "name track value note";
+      padding-block: 0.8rem;
+    }
+
+    .fund__name {
+      flex-direction: row;
+      align-items: baseline;
+      gap: 0.75rem;
+    }
+
+    .fund__note {
+      padding-left: 0.5rem;
+    }
+  }
+
+  /* Bars draw once, left to right, when the chart scrolls into view */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .funds__list[data-reveal] .fund__bar {
+      width: 0;
+      transition: width 1.1s var(--ease);
+      transition-delay: calc(var(--i, 0) * 60ms + 200ms);
+    }
+
+    :global(.js) .funds__list[data-reveal].is-in .fund__bar {
+      width: var(--w);
+    }
+  }
+</style>

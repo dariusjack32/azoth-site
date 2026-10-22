@@ -1,0 +1,410 @@
+---
+/**
+ * Announced acquisitions on a time axis: one stem per deal, height = headline value (linear, $0–14B).
+ * The five largest are labeled; this year's deals are emphasized. The ledger below is the full table view,
+ * so no value depends on the drawing.
+ */
+import { exits, ipos2026, ipoTotalM, fmtDate, fmtMoneyM } from "../../data/arch";
+import Ref from "./Ref.astro";
+
+const W = 960;
+const H = 330;
+const pad = { l: 16, r: 16, t: 64, b: 40 };
+const base = H - pad.b;
+const t0 = Date.UTC(2015, 0, 1);
+const t1 = Date.UTC(2027, 0, 1);
+const x = (iso: string) => {
+  const [y, m, d] = iso.split("-").map(Number);
+  return pad.l + ((Date.UTC(y, m - 1, d || 1) - t0) / (t1 - t0)) * (W - pad.l - pad.r);
+};
+const maxB = 14;
+const y = (v: number) => base - (v / maxB) * (base - pad.t);
+const years = Array.from({ length: 12 }, (_, i) => 2015 + i);
+const top5 = [...exits].filter((e) => e.valueB !== null).sort((a, b) => (b.valueB ?? 0) - (a.valueB ?? 0)).slice(0, 5);
+const labeled = new Set(top5.map((e) => e.company));
+const short = (name: string) => name.replace(/ (Therapeutics|Biopharmaceuticals)$/, "");
+---
+
+<figure class="exits">
+  <div class="exits__plot" data-reveal>
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      role="img"
+      aria-labelledby="exits-title exits-desc"
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <title id="exits-title">Announced acquisitions of ARCH-backed companies, 2015 to 2026, by headline value</title>
+      <desc id="exits-desc"
+        >Seventeen deals. The largest: {top5.map((e) => `${e.company}, ${e.value}`).join("; ")}. The table below lists every
+        deal.</desc
+      >
+
+      {/* Baseline and year ticks */}
+      <line class="axis" x1={pad.l} x2={W - pad.r} y1={base} y2={base} />
+      {
+        years.map((yr) => (
+          <g class="tick">
+            <line x1={x(`${yr}-01-01`)} x2={x(`${yr}-01-01`)} y1={base} y2={base + 6} />
+            <text x={x(`${yr}-07-01`)} y={base + 24} text-anchor="middle">
+              {yr}
+            </text>
+          </g>
+        ))
+      }
+
+      {/* One stem per deal */}
+      {
+        exits.map((e, i) => {
+          const cx = x(e.date);
+          const cy = e.valueB === null ? base : y(e.valueB);
+          const current = e.date.startsWith("2026");
+          return (
+            <g class:list={["deal", { "deal--now": current, "deal--na": e.valueB === null }]} style={`--i: ${i}`}>
+              <title>{`${e.company} → ${e.buyer} · ${fmtDate(e.date)} · ${e.value}${e.terms ? ` (${e.terms})` : ""}`}</title>
+              <rect class="deal__hit" x={cx - 9} y={pad.t - 30} width="18" height={base - pad.t + 30} />
+              {e.valueB !== null && <line class="deal__stem" x1={cx} x2={cx} y1={base} y2={cy} />}
+              <circle class="deal__dot" cx={cx} cy={cy} r="4" />
+              {labeled.has(e.company) && (
+                <g class="deal__label">
+                  <text x={cx} y={cy - 26} text-anchor="middle" class="deal__name">
+                    {short(e.company)}
+                  </text>
+                  <text x={cx} y={cy - 11} text-anchor="middle" class="deal__value">
+                    {e.value}
+                  </text>
+                </g>
+              )}
+            </g>
+          );
+        })
+      }
+    </svg>
+  </div>
+
+  <figcaption class="exits__caption muted">
+    Stem height is the headline value as announced; hover a stem for the deal. This year’s deals are in gold. The table below
+    lists all {exits.length}.
+  </figcaption>
+
+  <div class="ledger" role="table" aria-label="Announced acquisitions, oldest first">
+    <div class="ledger__row ledger__head" role="row">
+      <span role="columnheader" class="label">Announced</span>
+      <span role="columnheader" class="label">Company</span>
+      <span role="columnheader" class="label">Buyer</span>
+      <span role="columnheader" class="label ledger__num">Headline value</span>
+    </div>
+    {
+      exits.map((e) => (
+        <div class:list={["ledger__row", { "ledger__row--now": e.date.startsWith("2026") }]} role="row">
+          <span role="cell" class="ledger__date">
+            {fmtDate(e.date)}
+          </span>
+          <span role="cell" class="ledger__company">
+            {e.company}
+          </span>
+          <span role="cell" class="ledger__buyer muted">
+            <span class="ledger__arrow" aria-hidden="true">
+              →{" "}
+            </span>
+            {e.buyer}
+          </span>
+          <span role="cell" class="ledger__num">
+            <span class="ledger__value">
+              {e.value}
+              <Ref ids={e.src} />
+            </span>
+            {e.terms && <span class="ledger__terms muted">{e.terms}</span>}
+          </span>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="ipos">
+    <p class="label ipos__title">2026 listings · {fmtMoneyM(ipoTotalM)} raised in four Nasdaq IPOs</p>
+    <ul class="ipos__list" role="list">
+      {
+        ipos2026.map((i) => (
+          <li class="ipo">
+            <span class="ipo__company">{i.company}</span>
+            <span class="ipo__ticker label">{i.ticker}</span>
+            <span class="ipo__date muted">First trade {fmtDate(i.date)}</span>
+            <span class="ipo__raised">
+              {i.raised}
+              <Ref ids={i.src} />
+            </span>
+            {i.note && <span class="ipo__note muted">{i.note}</span>}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <p class="exits__foot muted">
+    Headline values are as announced. “Up to” figures include milestone or contingent payments. Metsera is dated to its
+    closing. Listing totals use base offerings. ARCH’s share of any deal is not public.
+  </p>
+</figure>
+
+<style>
+  .exits__plot {
+    display: none;
+  }
+
+  @media (min-width: 48em) {
+    .exits__plot {
+      display: block;
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .axis {
+    stroke: var(--rule);
+    stroke-width: 1;
+  }
+
+  .tick line {
+    stroke: var(--rule);
+  }
+
+  .tick text {
+    fill: var(--ash);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+  }
+
+  .deal__hit {
+    fill: transparent;
+  }
+
+  .deal__stem {
+    stroke: var(--ash);
+    stroke-width: 1.5;
+    transition: stroke 0.2s var(--ease);
+  }
+
+  .deal__dot {
+    fill: var(--bone);
+    stroke: var(--obsidian);
+    stroke-width: 2;
+    transition: fill 0.2s var(--ease);
+  }
+
+  .deal--now .deal__stem {
+    stroke: var(--gold);
+  }
+
+  .deal--now .deal__dot {
+    fill: var(--gold);
+  }
+
+  .deal--na .deal__dot {
+    fill: var(--obsidian);
+    stroke: var(--ash);
+    stroke-width: 1.25;
+  }
+
+  .deal:hover .deal__stem {
+    stroke: var(--gold);
+  }
+
+  .deal:hover .deal__dot {
+    fill: var(--gold);
+  }
+
+  .deal__name {
+    fill: var(--bone);
+    font-family: var(--font-body);
+    font-size: 14px;
+  }
+
+  .deal__value {
+    fill: var(--ash);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+
+  /* Stems rise once when the plot scrolls into view */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .exits__plot[data-reveal] .deal {
+      opacity: 0;
+      transition: opacity 0.6s var(--ease);
+      transition-delay: calc(var(--i, 0) * 50ms + 150ms);
+    }
+
+    :global(.js) .exits__plot[data-reveal].is-in .deal {
+      opacity: 1;
+    }
+  }
+
+  .exits__caption {
+    display: none;
+    max-width: 62ch;
+    font-size: 0.9375rem;
+  }
+
+  @media (min-width: 48em) {
+    .exits__caption {
+      display: block;
+    }
+  }
+
+  /* ---------- Ledger (the table view) ---------- */
+  .ledger {
+    margin-top: 2.25rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .ledger__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "company num"
+      "buyer num"
+      "date num";
+    column-gap: 1rem;
+    row-gap: 0.1rem;
+    padding-block: 0.85rem;
+    border-bottom: 1px solid var(--rule-faint);
+    font-size: 0.9375rem;
+  }
+
+  .ledger__head {
+    display: none;
+  }
+
+  .ledger__date {
+    grid-area: date;
+    color: var(--ash);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+  }
+
+  .ledger__company {
+    grid-area: company;
+  }
+
+  .ledger__buyer {
+    grid-area: buyer;
+  }
+
+  .ledger__num {
+    grid-area: num;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .ledger__value {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .ledger__terms {
+    font-size: 0.8125rem;
+  }
+
+  .ledger__row--now .ledger__value {
+    color: var(--gold);
+  }
+
+  @media (min-width: 48em) {
+    .ledger__row {
+      grid-template-columns: 8.5rem minmax(0, 1.3fr) minmax(0, 1fr) 11rem;
+      grid-template-areas: "date company buyer num";
+      align-items: baseline;
+    }
+
+    .ledger__head {
+      display: grid;
+      padding-block: 0.6rem;
+    }
+
+    .ledger__head > :nth-child(1) {
+      grid-area: date;
+    }
+
+    .ledger__head > :nth-child(2) {
+      grid-area: company;
+    }
+
+    .ledger__head > :nth-child(3) {
+      grid-area: buyer;
+    }
+
+    .ledger__head > :nth-child(4) {
+      grid-area: num;
+    }
+
+    .ledger__arrow {
+      display: none;
+    }
+  }
+
+  /* ---------- 2026 listings ---------- */
+  .ipos {
+    margin-top: 3rem;
+  }
+
+  .ipos__title {
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .ipo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 1rem;
+    row-gap: 0.2rem;
+    padding-block: 0.85rem;
+    border-bottom: 1px solid var(--rule-faint);
+    font-size: 0.9375rem;
+  }
+
+  .ipo__raised {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ipo__date,
+  .ipo__note {
+    font-size: 0.8125rem;
+  }
+
+  @media (min-width: 48em) {
+    .ipo {
+      grid-template-columns: minmax(0, 1.3fr) 8.5rem minmax(0, 1fr) 7rem;
+      align-items: baseline;
+    }
+
+    .ipo__raised {
+      grid-column: 4;
+    }
+
+    .ipo__note {
+      grid-column: 3 / -1;
+    }
+  }
+
+  .exits__foot {
+    max-width: 62ch;
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+  }
+</style>

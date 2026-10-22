@@ -1,0 +1,160 @@
+---
+/** How the record is kept: five stages on one line, with the human sign-off marked, then the rules it keeps. */
+const stages = [
+  { n: "01", name: "Sources", text: "SEC filings, press releases, trial registries, and the firm’s own pages." },
+  { n: "02", name: "Collect", text: "A scheduled pull. Each item is stored with its source and its date." },
+  { n: "03", name: "Reconcile", text: "Each fact is matched to one company record. The newest dated fact wins. Conflicts wait." },
+  { n: "04", name: "Review", text: "A person approves every change before anything goes out.", human: true },
+  { n: "05", name: "Publish", text: "The page, the Monday brief and any alerts update from the same record." },
+];
+
+const rules = [
+  "Show a figure without a source.",
+  "Overwrite a fact without keeping the old one.",
+  "Send anything a person has not approved.",
+  "Move a firm’s confidential data outside its own accounts.",
+];
+---
+
+<ol class="pipe" role="list" data-reveal>
+  {
+    stages.map((s) => (
+      <li class:list={["pipe__stage", { "pipe__stage--human": s.human }]}>
+        <span class="pipe__node" aria-hidden="true" />
+        <span class="pipe__n label">{s.n}</span>
+        <h3 class="pipe__name">{s.name}</h3>
+        <p class="pipe__text muted">{s.text}</p>
+        {s.human && <p class="pipe__tag label">The human checkpoint</p>}
+      </li>
+    ))
+  }
+</ol>
+
+<div class="never">
+  <p class="label never__title">What it never does</p>
+  <ul class="never__list" role="list">
+    {rules.map((r) => <li>{r}</li>)}
+  </ul>
+</div>
+
+<style>
+  .pipe {
+    position: relative;
+    display: grid;
+    gap: 0;
+  }
+
+  /* Phones: a vertical line through the nodes */
+  .pipe::before {
+    content: "";
+    position: absolute;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    left: 5px;
+    width: 1px;
+    background: var(--rule);
+  }
+
+  .pipe__stage {
+    position: relative;
+    padding: 0 0 2rem 2.25rem;
+  }
+
+  .pipe__node {
+    position: absolute;
+    top: 0.3rem;
+    left: 0;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--obsidian);
+    box-shadow: inset 0 0 0 1px var(--bone);
+  }
+
+  .pipe__stage--human .pipe__node {
+    background: var(--gold);
+    box-shadow: 0 0 0 4px var(--obsidian), 0 0 0 5px var(--gold);
+  }
+
+  .pipe__name {
+    margin-top: 0.4rem;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: 1.1;
+  }
+
+  .pipe__stage--human .pipe__name {
+    color: var(--gold);
+  }
+
+  .pipe__text {
+    max-width: 34ch;
+    margin-top: 0.6rem;
+    font-size: 0.9375rem;
+  }
+
+  .pipe__tag {
+    margin-top: 0.75rem;
+    color: var(--gold);
+  }
+
+  @media (min-width: 64em) {
+    .pipe {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+    }
+
+    /* Desktop: one horizontal line through the nodes */
+    .pipe::before {
+      top: 5px;
+      bottom: auto;
+      left: 0;
+      right: 0;
+      width: auto;
+      height: 1px;
+    }
+
+    .pipe__stage {
+      padding: 2rem 0 0;
+    }
+
+    .pipe__node {
+      top: 0;
+    }
+  }
+
+  .never {
+    margin-top: 2.5rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .never__list {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 1rem;
+  }
+
+  .never__list li {
+    position: relative;
+    max-width: 52ch;
+    padding-left: 1.4rem;
+  }
+
+  .never__list li::before {
+    content: "";
+    position: absolute;
+    top: 0.8em;
+    left: 0;
+    width: 0.65rem;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  @media (min-width: 48em) {
+    .never__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+    }
+  }
+</style>

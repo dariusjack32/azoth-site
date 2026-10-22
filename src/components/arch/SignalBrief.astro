@@ -1,0 +1,202 @@
+---
+/** The Monday brief (portfolio signals in a window) and the log of changes to the published list. */
+import { signals, briefWindow, changeLog, changesOnNewsPage, fmtDate, spell } from "../../data/arch";
+import Ref from "./Ref.astro";
+
+const kinds = ["Regulatory", "Capital", "Firm"] as const;
+const grouped = kinds
+  .map((k) => ({ kind: k, items: signals.filter((s) => s.kind === k) }))
+  .filter((g) => g.items.length > 0);
+const onNews = changeLog.filter((c) => changesOnNewsPage.includes(c.name)).length;
+---
+
+<article class="brief" aria-labelledby="brief-title" data-reveal>
+  <header class="brief__head">
+    <p class="label">Portfolio signals · Public sources</p>
+    <h3 id="brief-title" class="brief__title">{briefWindow.label}</h3>
+    <p class="brief__meta label">{signals.length} items · each linked to its source</p>
+  </header>
+
+  {
+    grouped.map((g) => (
+      <section class="brief__group" aria-label={g.kind}>
+        <h4 class="brief__kind label">
+          {g.kind} <span aria-hidden="true">· {g.items.length}</span>
+        </h4>
+        <ul role="list">
+          {g.items.map((s) => (
+            <li class:list={["signal", { "signal--flag": s.flag }]}>
+              <span class="signal__date">{fmtDate(s.date)}</span>
+              <div class="signal__body">
+                <p class="signal__subject">{s.subject}</p>
+                <p class="signal__text">
+                  {s.text}
+                  <Ref ids={s.src} />
+                </p>
+                {s.flag && <p class="signal__flag label">{s.flag}</p>}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</article>
+
+<div class="changes">
+  <h3 class="h-item" data-reveal>{spell(changeLog.length, true)} changes to the published list.</h3>
+  <p class="changes__lede body-copy muted" data-reveal style="--i: 1">
+    {spell(onNews, true)} of the {spell(changeLog.length)} already appear on the firm’s own news page. That is the usual
+    pattern: when one fact lives in two places, one copy goes stale. A system keeps one record and publishes every view from it.
+  </p>
+  <ol class="changes__list" role="list">
+    {
+      changeLog.map((c) => (
+        <li class="change">
+          <span class="change__date">{fmtDate(c.date)}</span>
+          <span class="change__name">{c.name}</span>
+          <span class="change__diff">
+            <span class="change__was">{c.was}</span>
+            <span class="change__arrow" aria-hidden="true">
+              →
+            </span>
+            <span class="visually-hidden">changed to</span>
+            <span class="change__now">
+              {c.now}
+              <Ref ids={c.src} />
+            </span>
+          </span>
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<style>
+  /* The brief reads as a document on a raised surface */
+  .brief {
+    padding: clamp(1.5rem, 4vw, 2.75rem);
+    border: 1px solid var(--rule);
+    background: var(--ink);
+  }
+
+  .brief__head {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .brief__title {
+    margin-top: 0.75rem;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: 1.1;
+  }
+
+  .brief__meta {
+    margin-top: 0.6rem;
+  }
+
+  .brief__group {
+    margin-top: 1.75rem;
+  }
+
+  .brief__kind {
+    padding-bottom: 0.5rem;
+    color: var(--gold);
+  }
+
+  .signal {
+    display: grid;
+    gap: 0.35rem;
+    padding-block: 1rem;
+    border-top: 1px solid var(--rule-faint);
+  }
+
+  .signal__date {
+    color: var(--ash);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  .signal__subject {
+    font-weight: 500;
+  }
+
+  .signal__text {
+    max-width: 60ch;
+    margin-top: 0.2rem;
+    color: var(--ash);
+    font-size: 0.9375rem;
+  }
+
+  .signal__flag {
+    margin-top: 0.6rem;
+    padding-left: 0.75rem;
+    border-left: 1px solid var(--gold);
+    color: var(--bone);
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+
+  @media (min-width: 48em) {
+    .signal {
+      grid-template-columns: 8.5rem minmax(0, 1fr);
+      column-gap: var(--col-gap);
+      align-items: baseline;
+    }
+  }
+
+  /* ---------- Change log ---------- */
+  .changes {
+    margin-top: clamp(3.5rem, 7vw, 5rem);
+  }
+
+  .changes__lede {
+    margin-top: 1rem;
+  }
+
+  .changes__list {
+    margin-top: 1.75rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .change {
+    display: grid;
+    gap: 0.25rem;
+    padding-block: 0.9rem;
+    border-bottom: 1px solid var(--rule-faint);
+    font-size: 0.9375rem;
+  }
+
+  .change__date {
+    color: var(--ash);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+  }
+
+  .change__diff {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.6rem;
+  }
+
+  .change__was {
+    color: var(--ash);
+    text-decoration: line-through 1px var(--ash);
+  }
+
+  .change__arrow {
+    color: var(--gold);
+  }
+
+  @media (min-width: 48em) {
+    .change {
+      grid-template-columns: 8.5rem minmax(0, 0.8fr) minmax(0, 1.6fr);
+      column-gap: var(--col-gap);
+      align-items: baseline;
+    }
+  }
+</style>

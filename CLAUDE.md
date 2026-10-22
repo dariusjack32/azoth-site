@@ -17,6 +17,7 @@ Static Astro 7 site, deployed to GitHub Pages at azothandco.com. Design and copy
 
 - Voice: confident, plain, short sentences. Never: revolutionize, cutting-edge, unlock, leverage, synergy, game-changer, supercharge, seamless, empower, magic. No emojis or exclamation marks.
 - No fabricated proof (testimonials, logos, stats, case studies, team size, years in business). Never name a prospective client.
+  - One deliberate exception: `/arch/`, an unlisted study built only from public sources (noindex, out of the sitemap, not in the nav). Every figure lives in `src/data/arch.ts` with a cited source. Keep it unlisted unless Denzel says otherwise.
 - No contact forms. No login fields. The real portal will be a separate app at portal.azothandco.com.
 - Occult elements: only the seven in brief §3; everything else reads as plain, premium business design.
 - Hand-written CSS with tokens. No Tailwind, UI kits or component libraries.

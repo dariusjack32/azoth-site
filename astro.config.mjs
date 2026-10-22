@@ -11,7 +11,8 @@ export default defineConfig({
   build: { format: "directory" },
   integrations: [
     sitemap({
-      filter: (page) => !page.includes("/portal/") && !page.includes("/404"),
+      // /arch/ is an unlisted study (noindex): shared by link, kept out of search.
+      filter: (page) => !page.includes("/portal/") && !page.includes("/404") && !page.includes("/arch/"),
     }),
   ],
 });
