@@ -1,0 +1,167 @@
+---
+/**
+ * The stakes: where ARCH's published portfolio list has drifted from the public record,
+ * what that drift costs when it happens inside a firm, and the one-day count behind this page.
+ */
+import { changeLog, changesOnNewsPage, fmtDate, spell } from "../../data/arch";
+import Ref from "./Ref.astro";
+
+const onNews = changeLog.filter((c) => changesOnNewsPage.includes(c.name)).length;
+
+const costs = [
+  {
+    where: "On a website",
+    what: "A stale portfolio page.",
+    cost: "Embarrassing. Nobody pays for it.",
+  },
+  {
+    where: "In an LP report",
+    what: "A company marked private that listed in June.",
+    cost: "A question in the annual meeting you can’t answer from the deck.",
+  },
+  {
+    where: "In a board pack",
+    what: "A financing a partner hears about from the founder.",
+    cost: "The partner is the last to know about their own company.",
+  },
+  {
+    where: "In a valuation mark",
+    what: "An acquisition priced three weeks late.",
+    cost: "Auditors ask why. So do LPs.",
+  },
+];
+---
+
+<div class="drift">
+  <ol class="changes" role="list" data-reveal>
+    {
+      changeLog.map((c) => (
+        <li class="change">
+          <span class="change__date">{fmtDate(c.date)}</span>
+          <span class="change__name">{c.name}</span>
+          <span class="change__diff">
+            <span class="change__was">{c.was}</span>
+            <span class="change__arrow" aria-hidden="true">→</span>
+            <span class="visually-hidden">changed to</span>
+            <span class="change__now">
+              {c.now}
+              <Ref ids={c.src} />
+            </span>
+          </span>
+        </li>
+      ))
+    }
+  </ol>
+  <p class="drift__note muted" data-reveal>
+    {spell(onNews, true)} of the {spell(changeLog.length)} already appear on ARCH’s own news page.<Ref ids="news" /> One fact,
+    two pages, one copy stale. That is not carelessness. It is what happens when the record lives in inboxes and
+    spreadsheets and the website is updated last.
+  </p>
+
+  <h3 class="h-item drift__sub" data-reveal>The portfolio page is the version nobody pays for.</h3>
+  <dl class="costs">
+    {
+      costs.map((c, i) => (
+        <div class="cost" data-reveal style={`--i: ${i}`}>
+          <dt class="cost__where label">{c.where}</dt>
+          <dd class="cost__body">
+            <span class="cost__what">{c.what}</span>
+            <span class="cost__cost muted">{c.cost}</span>
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+</div>
+
+<style>
+  .changes {
+    border-top: 1px solid var(--rule);
+  }
+
+  .change {
+    display: grid;
+    gap: 0.25rem;
+    padding-block: 0.9rem;
+    border-bottom: 1px solid var(--rule-faint);
+    font-size: 0.9375rem;
+  }
+
+  .change__date {
+    color: var(--ash);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+  }
+
+  .change__diff {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.6rem;
+  }
+
+  .change__was {
+    color: var(--ash);
+    text-decoration: line-through 1px var(--ash);
+  }
+
+  .change__arrow {
+    color: var(--gold);
+  }
+
+  .drift__note {
+    max-width: 60ch;
+    margin-top: 1.5rem;
+  }
+
+  .drift__sub {
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+  }
+
+  .costs {
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .cost {
+    display: grid;
+    gap: 0.5rem;
+    padding-block: 1.1rem;
+    border-bottom: 1px solid var(--rule-faint);
+  }
+
+  .cost__where {
+    color: var(--gold);
+  }
+
+  .cost__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    max-width: 52ch;
+  }
+
+  .cost__what {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: 1.15;
+  }
+
+  .cost__cost {
+    font-size: 0.9375rem;
+  }
+
+  @media (min-width: 48em) {
+    .change {
+      grid-template-columns: 8.5rem minmax(0, 0.8fr) minmax(0, 1.6fr);
+      column-gap: var(--col-gap);
+      align-items: baseline;
+    }
+
+    .cost {
+      grid-template-columns: 9rem minmax(0, 1fr);
+      column-gap: var(--col-gap);
+      align-items: baseline;
+    }
+  }
+</style>

@@ -15,6 +15,7 @@ import FundChart from "../../components/arch/FundChart.astro";
 import CompanyExplorer from "../../components/arch/CompanyExplorer.astro";
 import ExitChart from "../../components/arch/ExitChart.astro";
 import SignalBrief from "../../components/arch/SignalBrief.astro";
+import Drift from "../../components/arch/Drift.astro";
 import Pipeline from "../../components/arch/Pipeline.astro";
 import {
   AS_OF_LABEL,
@@ -38,20 +39,21 @@ const bigDeals = exits.filter((e) => (e.valueB ?? 0) >= 7).length;
 const ipoBillions = (ipoTotalM / 1000).toFixed(1);
 
 const figures = [
-  { value: String(firm.founded), label: "Founded, as a spin-out of a University of Chicago initiative", src: firm.foundedSrc },
+  { value: String(changeLog.length), label: "Facts on ARCH’s published portfolio list that newer public sources contradict", href: "#stakes" },
+  { value: String(firm.listCount), label: "Companies on that list, each checked against filings and announcements", src: firm.listSrc },
   { value: raised, label: `Committed across the ${raisedFundCount} closed funds with published sizes`, href: "#capital" },
-  { value: String(firm.listCount), label: "Companies on ARCH’s published portfolio list", src: firm.listSrc },
-  { value: String(exits.length), label: `Announced acquisitions of ARCH-backed companies since ${firstExitYear}`, href: "#outcomes" },
+  { value: "1 day", label: `To rebuild the public record from ${sources.length} sources, with a person checking each change` },
 ];
 
 const counts = [
   { n: sources.length, label: "Public sources" },
   { n: record.length, label: "Company records" },
-  { n: changeLog.length, label: "Changes to the published list" },
-  { n: 0, label: "Internal documents" },
+  { n: changeLog.length, label: "Corrections to the published list" },
+  { n: 1, label: "Working day" },
 ];
 
 const toc = [
+  ["#stakes", "Stakes"],
   ["#method", "Method"],
   ["#capital", "Capital"],
   ["#companies", "Companies"],
@@ -63,16 +65,16 @@ const toc = [
 ---
 
 <Base
-  title="ARCH at forty, on one page — Azoth & Co."
-  description="An independent study from public sources: ARCH Venture Partners’ funds, companies and outcomes in one cited record, and the system that keeps it current."
+  title="What a stale fact costs — Azoth & Co."
+  description="ARCH Venture Partners’ published portfolio list is out of date in ten places. We rebuilt the public record in a day, from cited sources, to show what the fix looks like."
   noindex
   image="/og-arch.png"
-  imageAlt="ARCH at forty, on one page. An independent study by Azoth & Co."
+  imageAlt="What a stale fact costs. An independent study of ARCH Venture Partners by Azoth & Co."
 >
   <PageHeader
     label="Study · Public record"
-    title="ARCH at forty, on one page."
-    sub="ARCH Venture Partners’ funds, companies and outcomes, rebuilt from public sources into one record. Every figure is cited. The method is the one we use inside a firm."
+    title="What a stale fact costs."
+    sub="ARCH Venture Partners’ published portfolio list is out of date in ten places. We found them in a day, from public sources. The same drift inside a firm lands in LP reports, board materials and valuation marks."
   >
     <p class="study-note label">
       Independent study by Azoth &amp; Co. · As of {AS_OF_LABEL} · Not affiliated with or endorsed by ARCH Venture
@@ -109,12 +111,22 @@ const toc = [
     </nav>
   </PageHeader>
 
-  <Section id="method" label="01 · Method">
-    <h2 class="h-section" data-reveal>One record. Every figure cited.</h2>
+  <Section id="stakes" label="01 · Stakes">
+    <h2 class="h-section" data-reveal>Ten facts on ARCH’s own list have moved.</h2>
     <p class="lede" data-reveal style="--i: 1">
-      A firm’s public record is scattered. Fund sizes sit in press releases. Companies sit on a portfolio page. Exits sit in
-      SEC filings and deal announcements. We pulled them into one record, tied each fact to its source, and kept the newest
-      dated fact wherever two sources disagreed.
+      We checked all {firm.listCount} companies on ARCH’s portfolio page<Ref ids="portfolio" /> against filings and
+      announcements. Ten entries are behind: four companies that listed on Nasdaq this year, one acquired, one taken private,
+      one wound down, one renamed, and two ARCH-backed companies that don’t appear at all.
+    </p>
+    <Drift />
+  </Section>
+
+  <Section id="method" label="02 · Method">
+    <h2 class="h-section" data-reveal>One record. Every fact cited. One day.</h2>
+    <p class="lede" data-reveal style="--i: 1">
+      Fund sizes sit in press releases. Companies sit on a portfolio page. Exits sit in SEC filings. We pulled them into one
+      record, tied each fact to its source and date, and kept the newest dated fact wherever two sources disagreed. One person
+      did it in a working day with a system doing the collecting. A person still checked every change.
     </p>
     <ul class="counts" role="list">
       {
@@ -128,7 +140,7 @@ const toc = [
     </ul>
   </Section>
 
-  <Section id="capital" label="02 · Capital">
+  <Section id="capital" label="03 · Capital">
     <h2 class="h-section" data-reveal>From $9 million to $3 billion a fund.</h2>
     <p class="lede" data-reveal style="--i: 1">
       ARCH’s first fund raised about $9 million in 1989.<Ref ids="gv2014" /> Fund XIII closed at more than $3 billion in 2024.<Ref
@@ -138,7 +150,7 @@ const toc = [
     <FundChart />
   </Section>
 
-  <Section id="companies" label="03 · Companies">
+  <Section id="companies" label="04 · Companies">
     <h2 class="h-section" data-reveal>{firm.listCount} companies, sorted by what they do.</h2>
     <p class="lede" data-reveal style="--i: 1">
       ARCH lists {firm.listCount} companies on its portfolio page.<Ref ids="portfolio" /> We gave each one a primary area,
@@ -148,7 +160,7 @@ const toc = [
     <CompanyExplorer />
   </Section>
 
-  <Section id="outcomes" label="04 · Outcomes">
+  <Section id="outcomes" label="05 · Outcomes">
     <h2 class="h-section" data-reveal>
       {spell(exits.length, true)} acquisitions. {spell(ipos2026.length, true)} listings this year.
     </h2>
@@ -160,16 +172,17 @@ const toc = [
     <ExitChart />
   </Section>
 
-  <Section id="signals" label="05 · Signals">
-    <h2 class="h-section" data-reveal>The Monday brief, from public data.</h2>
+  <Section id="signals" label="06 · Signals">
+    <h2 class="h-section" data-reveal>What the partners would have read on Monday.</h2>
     <p class="lede" data-reveal style="--i: 1">
-      This is what a weekly digest would have flagged between August and October, from public sources alone. Each line links
-      to its source. Inside a firm, the same brief also reads the private record.
+      Seven events across seven companies in twelve weeks, each one a fact that has to reach a partner, an LP report and the
+      website before someone else mentions it. This is the brief a system would have sent, from public sources alone. Inside
+      a firm, it also reads the private record.
     </p>
     <SignalBrief />
   </Section>
 
-  <Section id="system" label="06 · System">
+  <Section id="system" label="07 · System">
     <h2 class="h-section" data-reveal>How it runs.</h2>
     <p class="lede" data-reveal style="--i: 1">
       This page was assembled from the sources below on {AS_OF_LABEL}. Inside a firm, the same pipeline runs on a schedule,
@@ -178,14 +191,16 @@ const toc = [
     <Pipeline />
   </Section>
 
-  <Section id="next" label="07 · Next">
+  <Section id="next" label="08 · Next">
     <h2 class="h-section" data-reveal>The public record is the easy part.</h2>
     <p class="statement" data-reveal style="--i: 1">
-      Inside a firm, the same method runs on the private record: capital calls, LP reporting, board materials, portfolio
-      metrics, and the follow-ups that live in one person’s inbox. That is where the hours go.
+      A stale fact on a website is embarrassing. The same fact in an LP letter is a question you can’t answer in the
+      meeting. Inside a firm, this method runs on capital calls, LP reporting, board materials and portfolio metrics, with a
+      person signing off before anything goes out.
     </p>
     <p class="body-copy muted" data-reveal style="--i: 2">
-      We start with an Assay: typically two to four weeks, a fixed fee, and a ranked list of what to fix first.
+      We start with an Assay: two to four weeks, a fixed fee, and a ranked list of where your record drifts and what each
+      drift costs.
     </p>
     <div data-reveal style="--i: 3">
       <a class="link" href="/services/">How we work <span aria-hidden="true">→</span></a>
