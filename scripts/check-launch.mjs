@@ -19,6 +19,7 @@ const checks = [
   ["LEGAL_NAME", (v) => filled(v), "the exact legal name from your Certificate of Formation"],
   ["EMAIL", (v) => filled(v) && /^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(v), "a real address you've created"],
   ["CAL_LINK", (v) => v === "" || (filled(v) && /^https:\/\/(app\.)?cal\.com\/[^\s?#]+$/i.test(v)), 'empty, or a Cal.com link like "https://cal.com/your-handle/intro"'],
+  ["CAL_LINK_DISCOVERY", (v) => v === undefined || v === "" || (filled(v) && /^https:\/\/(app\.)?cal\.com\/[^\s?#]+$/i.test(v)), "empty, or a Cal.com link"],
   ["PRIVACY_REVIEWED", (v) => v === true, "true, after you've read and edited /privacy"],
 ];
 

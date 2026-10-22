@@ -21,8 +21,9 @@ export const FOUNDER_NAME = "Denzel Yeboah";
 /** Public contact address. Create it first (e.g. a free hello@ alias in Google Workspace) or change it. */
 export const EMAIL = "denzel@azothandco.com";
 
-/** Your Cal.com booking link, e.g. "https://cal.com/your-handle/intro". Optional: empty shows an email fallback on /contact. */
-export const CAL_LINK = "https://cal.com/azothandco/intro";
+/** Cal.com booking links. /contact shows both, Intro first. Empty CAL_LINK shows an email fallback instead. */
+export const CAL_LINK = "https://cal.com/azothandco/intro"; // Intro call, 15 min
+export const CAL_LINK_DISCOVERY = "https://cal.com/azothandco/discovery"; // Discovery call, 30 min
 
 /** Shown in the footer. Never a street address. */
 export const LOCATION = "Dallas–Fort Worth, Texas";

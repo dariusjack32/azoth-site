@@ -3,23 +3,31 @@ import Base from "../layouts/Base.astro";
 import PageHeader from "../components/PageHeader.astro";
 import SectionLabel from "../components/SectionLabel.astro";
 import Mark from "../components/Mark.astro";
-import { CAL_LINK, EMAIL } from "../config";
+import { CAL_LINK, CAL_LINK_DISCOVERY, EMAIL } from "../config";
 
 // Cal.com wants "handle/event" plus the origin it's hosted on.
-const cal = CAL_LINK ? new URL(CAL_LINK) : null;
-const calLink = cal ? cal.pathname.replace(/^\/+|\/+$/g, "") : "";
-const calOrigin = cal ? cal.origin : "";
+const toEvent = (url: string, name: string, minutes: number, blurb: string) => {
+  const u = new URL(url);
+  return { url, name, minutes, blurb, link: u.pathname.replace(/^\/+|\/+$/g, ""), origin: u.origin };
+};
+const events = [
+  CAL_LINK && toEvent(CAL_LINK, "Intro call", 15, "A first look at where the work stalls, and whether we can help."),
+  CAL_LINK_DISCOVERY &&
+    toEvent(CAL_LINK_DISCOVERY, "Discovery call", 30, "Bring the process. We map it and name the fixes that matter most."),
+].filter((e): e is ReturnType<typeof toEvent> => Boolean(e));
+const cal = events.length > 0;
+const calEvents = events.map(({ link, origin }) => ({ link, origin }));
 const isDev = import.meta.env.DEV;
 ---
 
 <Base
   title="Book a call — Azoth & Co."
-  description="Book a thirty-minute call with Azoth & Co. No pitch deck — tell us where the work gets stuck."
+  description="Book a 15- or 30-minute call with Azoth & Co. No pitch deck — tell us where the work gets stuck."
 >
   <PageHeader
     label="Contact"
     title="Book a call."
-    sub="Thirty minutes. No pitch deck. Tell us where the work gets stuck."
+    sub="Fifteen minutes or thirty. No pitch deck. Tell us where the work gets stuck."
     compact
   />
 
@@ -43,11 +51,44 @@ const isDev = import.meta.env.DEV;
           {
             cal ? (
               <>
-                <div id="cal-booker" class="booker" role="region" aria-label="Booking calendar"></div>
+                {events.length > 1 && (
+                  <div class="picker" role="group" aria-label="Choose a call">
+                    {events.map((e, i) => (
+                      <button
+                        type="button"
+                        class="picker__opt"
+                        data-cal={i}
+                        aria-pressed={i === 0 ? "true" : "false"}
+                        aria-controls={`cal-booker-${i}`}
+                      >
+                        <span class="picker__head">
+                          <span class="picker__name">{e.name}</span>
+                          <span class="picker__time label">{e.minutes} min</span>
+                        </span>
+                        <span class="picker__blurb muted">{e.blurb}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {events.map((e, i) => (
+                  <div
+                    id={`cal-booker-${i}`}
+                    class="booker"
+                    role="region"
+                    aria-label={`Booking calendar: ${e.name}`}
+                    hidden={i !== 0}
+                  />
+                ))}
                 <p class="booker__fallback">
-                  <a class="text-link" href={CAL_LINK}>
-                    Calendar not loading? Open it directly.
-                  </a>
+                  Calendar not loading? Open it directly:{" "}
+                  {events.map((e, i) => (
+                    <>
+                      {i > 0 && " · "}
+                      <a class="text-link" href={e.url}>
+                        {e.name}
+                      </a>
+                    </>
+                  ))}
                 </p>
               </>
             ) : (
@@ -83,7 +124,7 @@ const isDev = import.meta.env.DEV;
 
   {
     cal && (
-      <script is:inline define:vars={{ calLink, calOrigin }}>
+      <script is:inline define:vars={{ calEvents }}>
         (function (C, A, L) {
           let p = function (a, ar) {
             a.q.push(ar);
@@ -117,18 +158,30 @@ const isDev = import.meta.env.DEV;
             };
         })(window, "https://app.cal.com/embed/embed.js", "init");
 
-        Cal("init", "intro", { origin: calOrigin });
-        Cal.ns.intro("inline", {
-          elementOrSelector: "#cal-booker",
-          calLink: calLink,
-          config: { layout: "month_view", theme: "dark" },
-        });
-        Cal.ns.intro("ui", {
-          theme: "dark",
-          cssVarsPerTheme: { dark: { "cal-brand": "#B8A06A" } },
-          hideEventTypeDetails: false,
-          layout: "month_view",
-        });
+        // One embed per call, each loaded the first time it's shown.
+        const ready = {};
+        const opts = document.querySelectorAll("[data-cal]");
+        const show = (i) => {
+          opts.forEach((b) => b.setAttribute("aria-pressed", String(Number(b.dataset.cal) === i)));
+          calEvents.forEach((_, j) => (document.getElementById("cal-booker-" + j).hidden = j !== i));
+          if (ready[i]) return;
+          ready[i] = true;
+          const ns = "call" + i;
+          Cal("init", ns, { origin: calEvents[i].origin });
+          Cal.ns[ns]("inline", {
+            elementOrSelector: "#cal-booker-" + i,
+            calLink: calEvents[i].link,
+            config: { layout: "month_view", theme: "dark" },
+          });
+          Cal.ns[ns]("ui", {
+            theme: "dark",
+            cssVarsPerTheme: { dark: { "cal-brand": "#B8A06A" } },
+            hideEventTypeDetails: false,
+            layout: "month_view",
+          });
+        };
+        opts.forEach((b) => b.addEventListener("click", () => show(Number(b.dataset.cal))));
+        show(0);
       </script>
     )
   }
@@ -168,6 +221,78 @@ const isDev = import.meta.env.DEV;
   .expect__n {
     padding-top: 0.25em;
     color: var(--gold);
+  }
+
+  .picker {
+    display: grid;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .picker__opt {
+    display: grid;
+    gap: 0.4rem;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid var(--rule);
+    background: transparent;
+    color: var(--bone);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition:
+      border-color 0.2s var(--ease),
+      background-color 0.2s var(--ease);
+  }
+
+  .picker__opt:hover {
+    border-color: var(--gold);
+  }
+
+  .picker__opt[aria-pressed="false"] .picker__name {
+    color: var(--ash);
+  }
+
+  .picker__opt[aria-pressed="true"] {
+    border-color: var(--gold);
+    background: var(--ink);
+    box-shadow: inset 0 0 0 1px var(--gold);
+  }
+
+  .picker__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .picker__name {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: 1.1;
+  }
+
+  .picker__time {
+    color: var(--gold);
+  }
+
+  .picker__blurb {
+    font-size: 0.9375rem;
+  }
+
+  @media (min-width: 40em) {
+    .picker {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .picker__opt {
+      transition: none;
+    }
+  }
+
+  .booker[hidden] {
+    display: none;
   }
 
   .booker {

@@ -53,7 +53,7 @@ Every text/background pair must pass WCAG AA.
 Allowed — and nothing else:
 1. **The mark.** An original geometric monogram: a thin circle enclosing an upward equilateral triangle with a horizontal bar across its lower third. It reads as an "A"; it's also the classical alchemical sign for air. Hand-written SVG, 1.25px gold strokes at display size, with a heavier-stroke variant for favicon sizes.
 2. **Roman numerals** I, II, III — for the three service stages only.
-3. **The tagline:** "Operations, transmuted."
+3. **The tagline:** "Operations, rebuilt."
 4. **The stage names** Assay and Opus, always paired with plain descriptors (Diagnose, Build).
 5. **The name story** on the About page (copy below).
 6. **One Latin line**, footer only, small mono: "Solve et coagula", with a `title` attribute: "Dissolve and coagulate — take it apart, rebuild it right."
@@ -89,7 +89,7 @@ Use this copy as written; tighten only if layout demands it. **[Brackets]** mark
 
 **Hero**
 - Label: AI & OPERATIONS CONSULTING
-- H1: Operations, transmuted.
+- H1: Operations, rebuilt.
 - Sub: Azoth & Co. turns manual processes into AI-powered systems your people actually use — diagnosed, built, and kept running, end to end.
 - Buttons: **Book a call** → /contact · text link "How we work ↓" → #how
 
@@ -132,7 +132,7 @@ Use this copy as written; tighten only if layout demands it. **[Brackets]** mark
 
 **Closing CTA**
 - H2: Start with a conversation.
-- Body: Thirty minutes. Tell us where the work gets stuck — you'll leave with at least one thing worth fixing, whether or not we work together.
+- Body: Fifteen minutes or thirty. Tell us where the work gets stuck — you'll leave with at least one thing worth fixing, whether or not we work together.
 - Button: **Book a call**
 
 ### Services `/services`
@@ -159,8 +159,8 @@ Use this copy as written; tighten only if layout demands it. **[Brackets]** mark
 - Closing CTA.
 
 ### Contact `/contact`
-- Label: CONTACT · H1: Book a call. · Sub: Thirty minutes. No pitch deck. Tell us where the work gets stuck.
-- Cal.com inline embed from `CAL_LINK`: dark theme, gold accent, script loaded on this page only, with a plain-link fallback if JS fails.
+- Label: CONTACT · H1: Book a call. · Sub: Fifteen minutes or thirty. No pitch deck. Tell us where the work gets stuck.
+- Two bookable calls — Intro call (15 min, `CAL_LINK`) and Discovery call (30 min, `CAL_LINK_DISCOVERY`) — picked with a two-option switch above one Cal.com inline embed: dark theme, gold accent, script loaded on this page only, with a plain-link fallback if JS fails.
 - What to expect (numbered 1–3 in mono):
   1. We listen: how work moves today, and where it stalls.
   2. We identify the one or two fixes likely to matter most.
@@ -177,7 +177,7 @@ Use this copy as written; tighten only if layout demands it. **[Brackets]** mark
 - Short, plain-language placeholder covering the booking tool and email contact. Header note: [DRAFT — review before launch].
 
 ### 404
-- H1: This page has been transmuted. · Sub: Or it never existed. · Link: Return home.
+- H1: This page has been rebuilt. · Sub: Or it never existed. · Link: Return home.
 
 ## 6. Hard rules
 - **No fabricated proof.** No testimonials, client logos, "trusted by" rows, case studies, statistics, team sizes, or years in business. Don't name any prospective client. No empty proof sections waiting to be filled — proof gets added when it's real.
@@ -186,7 +186,7 @@ Use this copy as written; tighten only if layout demands it. **[Brackets]** mark
 - Never display a street address.
 
 ## 7. SEO and sharing
-- Unique `<title>` and meta description per page. Home: "Azoth & Co. — Operations, transmuted." / "AI and operations consulting. We turn manual processes into systems your people actually use — diagnosed, built, and kept running, end to end."
+- Unique `<title>` and meta description per page. Home: "Azoth & Co. — Operations, rebuilt." / "AI and operations consulting. We turn manual processes into systems your people actually use — diagnosed, built, and kept running, end to end."
 - Open Graph and Twitter tags on every page, plus a 1200×630 `og.png`: obsidian background, gold mark, wordmark, tagline. This is what renders when the link is shared on LinkedIn — it has to look sharp.
 - Favicons from the mark: `favicon.svg`, 32px PNG, 180px apple-touch-icon.
 - JSON-LD `ProfessionalService`: name, url, email, areaServed "US", founder {FOUNDER_NAME}.
