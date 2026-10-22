@@ -22,7 +22,7 @@ export const FOUNDER_NAME = "Denzel Yeboah";
 export const EMAIL = "denzel@azothandco.com";
 
 /** Your Cal.com booking link, e.g. "https://cal.com/your-handle/intro". Optional: empty shows an email fallback on /contact. */
-export const CAL_LINK = "https://cal.com/azoth-co.-consulting-llc-gthbtk/30min";
+export const CAL_LINK = "https://cal.com/azothandco/intro";
 
 /** Shown in the footer. Never a street address. */
 export const LOCATION = "Dallas–Fort Worth, Texas";
