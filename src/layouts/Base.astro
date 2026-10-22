@@ -1,0 +1,112 @@
+---
+import "@fontsource/cormorant-garamond/latin-300.css";
+import "@fontsource/cormorant-garamond/latin-400.css";
+import "@fontsource/cormorant-garamond/latin-500.css";
+import "@fontsource/cormorant-garamond/latin-400-italic.css";
+import "@fontsource/instrument-sans/latin-400.css";
+import "@fontsource/instrument-sans/latin-500.css";
+import "@fontsource/ibm-plex-mono/latin-400.css";
+import "../styles/tokens.css";
+import "../styles/global.css";
+import displayFont from "@fontsource/cormorant-garamond/files/cormorant-garamond-latin-300-normal.woff2?url";
+
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import { BRAND, EMAIL, FOUNDER_NAME, SITE_URL } from "../config";
+
+interface Props {
+  title: string;
+  description: string;
+  noindex?: boolean;
+}
+
+const { title, description, noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, SITE_URL).href;
+const ogImage = new URL("/og.png", SITE_URL).href;
+const isHome = Astro.url.pathname === "/";
+
+const organization = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: BRAND,
+  url: SITE_URL,
+  email: EMAIL,
+  description:
+    "AI and operations consulting. We turn manual processes into systems your people actually use — diagnosed, built, and kept running, end to end.",
+  areaServed: "US",
+  address: { "@type": "PostalAddress", addressRegion: "TX", addressCountry: "US" },
+  founder: { "@type": "Person", name: FOUNDER_NAME },
+  image: ogImage,
+  logo: new URL("/apple-touch-icon.png", SITE_URL).href,
+};
+const organizationJson = JSON.stringify(organization).replace(/</g, "\\u003c");
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#0b0b0c" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={BRAND} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Azoth & Co. — Operations, transmuted." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script is:inline>
+      document.documentElement.classList.add("js");
+    </script>
+    {isHome && <script is:inline type="application/ld+json" set:html={organizationJson} />}
+
+    {/* Analytics: none in v1. Add one privacy-friendly script here later (e.g. Plausible or Cloudflare Web Analytics). */}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Nav />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <script is:inline>
+      (() => {
+        const items = document.querySelectorAll("[data-reveal]");
+        const show = (el) => el.classList.add("is-in");
+        if (!("IntersectionObserver" in window) || matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          items.forEach(show);
+          return;
+        }
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              show(entry.target);
+              observer.unobserve(entry.target);
+            }
+          },
+          { rootMargin: "0px 0px -8% 0px", threshold: 0.12 },
+        );
+        items.forEach((el) => observer.observe(el));
+      })();
+    </script>
+  </body>
+</html>

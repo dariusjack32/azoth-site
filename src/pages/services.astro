@@ -1,0 +1,417 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHeader from "../components/PageHeader.astro";
+import Section from "../components/Section.astro";
+import ClosingCTA from "../components/ClosingCTA.astro";
+import { capabilities, stages } from "../data/copy";
+import { ASSAY_CREDIT_DAYS } from "../config";
+
+type Fact = { term: string; text?: string; list?: string[] };
+
+const facts: Record<string, Fact[]> = {
+  assay: [
+    {
+      term: "What happens",
+      text: "Stakeholder interviews, process walk-throughs, and a systems and data inventory.",
+    },
+    {
+      term: "You receive",
+      list: [
+        "A map of current workflows",
+        "A ranked list of opportunities, with estimated hours and cost recovered",
+        "A 90-day roadmap",
+        "Build-vs-buy guidance for each",
+      ],
+    },
+    { term: "Timeline", text: "Typically 2–4 weeks." },
+    {
+      term: "Fee",
+      text:
+        ASSAY_CREDIT_DAYS > 0
+          ? `Fixed, agreed upfront. Credited in full toward an Opus engagement started within ${ASSAY_CREDIT_DAYS} days.`
+          : "Fixed, agreed upfront.",
+    },
+  ],
+  opus: [
+    { term: "Scope", text: "Set by the Assay." },
+    {
+      term: "How it runs",
+      text: "Smallest valuable piece first, then the next. Weekly check-ins. Documentation and team training included.",
+    },
+    { term: "Timeline", text: "Typically 4–12 weeks." },
+  ],
+  stewardship: [
+    { term: "Format", text: "A monthly retainer." },
+    {
+      term: "Includes",
+      list: [
+        "Monitoring and fixes",
+        "Ongoing improvements",
+        "New automations as needs change",
+        "A quarterly results review",
+        "A direct line when something needs attention",
+      ],
+    },
+  ],
+};
+
+const faqs = [
+  {
+    q: "Do we need to replace our software?",
+    a: "Usually not. We start with the tools you already pay for and make them work together.",
+  },
+  {
+    q: "We’re not technical. Is that a problem?",
+    a: "No — that’s the point. Systems built to be simple to use, with documentation in plain language.",
+  },
+  {
+    q: "How do you handle confidential information?",
+    a: "NDA before discovery, least-privilege access, and we build inside your accounts wherever possible. Your confidential data never goes into consumer AI tools.",
+  },
+  {
+    q: "What does it cost?",
+    a: "The Assay is a fixed fee agreed upfront. Builds are scoped and priced after the Assay, so you know the number before work begins.",
+  },
+  {
+    q: "How fast will we see results?",
+    a: "We deliver in stages, smallest valuable piece first. The goal is a working system in your hands in weeks, not months.",
+  },
+  {
+    q: "Do you work with smaller businesses?",
+    a: "Yes. The method scales down; so does the scope.",
+  },
+];
+---
+
+<Base
+  title="Services — Azoth & Co."
+  description="Three stages: an Assay to diagnose, an Opus to build, and Stewardship to keep it running. Start with the first; continue only if it earns it."
+>
+  <PageHeader label="Services" title="Three stages." sub="Start with the first. Continue only if it earns it." />
+
+  {
+    stages.map((stage) => (
+      <Section id={stage.id} class="stage-detail">
+        <p slot="margin" class="stage-detail__numeral" aria-hidden="true">
+          {stage.numeral}
+        </p>
+        <header class="stage-detail__head" data-reveal>
+          <h2 class="h-section">{stage.name}</h2>
+          <p class="stage-detail__descriptor label">{stage.descriptor}</p>
+        </header>
+        <p class="stage-detail__summary lede" data-reveal>
+          {stage.summary}
+        </p>
+        <dl class="facts">
+          {facts[stage.id].map((fact) => (
+            <div class="facts__row">
+              <dt class="label">{fact.term}</dt>
+              <dd>
+                {fact.text && <p>{fact.text}</p>}
+                {fact.list && (
+                  <ul class="facts__list" role="list">
+                    {fact.list.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                )}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </Section>
+    ))
+  }
+
+  <Section id="capabilities" label="Capabilities" labelAs="h2">
+    <ol class="caps" role="list">
+      {
+        capabilities.map((item) => (
+          <li class="caps__row" data-reveal>
+            <span class="caps__n label" aria-hidden="true">
+              {item.n}
+            </span>
+            <div class="caps__main">
+              <h3 class="h-item">{item.title}</h3>
+              <p class="caps__text muted">{item.text}</p>
+            </div>
+            <ul class="caps__examples" role="list">
+              {item.examples.map((example) => (
+                <li>{example}</li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
+  <Section id="questions" label="Questions" labelAs="h2">
+    <div class="faq">
+      {
+        faqs.map((item) => (
+          <details class="faq__item">
+            <summary class="faq__q">
+              <span class="faq__question">{item.q}</span>
+              <span class="faq__icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq__a">
+              <p class="muted">{item.a}</p>
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </Section>
+
+  <ClosingCTA />
+</Base>
+
+<style>
+  /* Stage detail — tighter than other sections so the three stages read as one set */
+  :global(.stage-detail .section__inner) {
+    padding-block: clamp(4.5rem, 9vw, 8rem);
+  }
+
+  .stage-detail__numeral {
+    color: var(--gold);
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 3rem + 4vw, 7.5rem);
+    font-weight: 300;
+    line-height: 0.9;
+  }
+
+  .stage-detail__descriptor {
+    margin-top: 0.9rem;
+  }
+
+  .stage-detail__summary {
+    max-width: 48ch;
+  }
+
+  .facts {
+    border-top: 1px solid var(--rule);
+  }
+
+  .facts__row {
+    display: grid;
+    gap: 0.6rem;
+    padding-block: 1.4rem;
+    border-bottom: 1px solid var(--rule-faint);
+  }
+
+  .facts__row dt {
+    padding-top: 0.2em;
+  }
+
+  .facts__row dd {
+    max-width: 52ch;
+  }
+
+  .facts__list li {
+    position: relative;
+    padding-left: 1.4rem;
+  }
+
+  .facts__list li + li {
+    margin-top: 0.4rem;
+  }
+
+  .facts__list li::before {
+    content: "";
+    position: absolute;
+    top: 0.8em;
+    left: 0;
+    width: 0.65rem;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  @media (min-width: 48em) {
+    .facts__row {
+      grid-template-columns: minmax(9rem, 1fr) 2.2fr;
+      column-gap: var(--col-gap);
+    }
+  }
+
+  @media (min-width: 64em) {
+    .facts {
+      display: grid;
+      grid-template-columns: subgrid;
+    }
+
+    .facts__row {
+      grid-column: 1 / -1;
+      grid-template-columns: subgrid;
+    }
+
+    .facts__row dt {
+      grid-column: 1 / span 3;
+    }
+
+    .facts__row dd {
+      grid-column: 4 / -1;
+    }
+  }
+
+  /* Capabilities */
+  .caps {
+    border-top: 1px solid var(--rule);
+  }
+
+  .caps__row {
+    display: grid;
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+    column-gap: 1rem;
+    row-gap: 1.1rem;
+    padding-block: 1.9rem;
+    border-bottom: 1px solid var(--rule-faint);
+  }
+
+  .caps__n {
+    padding-top: 0.6em;
+    color: var(--gold);
+  }
+
+  .caps__main,
+  .caps__examples {
+    grid-column: 2;
+  }
+
+  .caps__text {
+    max-width: 40ch;
+    margin-top: 0.75rem;
+  }
+
+  .caps__examples li {
+    position: relative;
+    padding-left: 1.4rem;
+    font-size: 0.9375rem;
+  }
+
+  .caps__examples li + li {
+    margin-top: 0.45rem;
+  }
+
+  .caps__examples li::before {
+    content: "";
+    position: absolute;
+    top: 0.8em;
+    left: 0;
+    width: 0.65rem;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  @media (min-width: 64em) {
+    .caps {
+      display: grid;
+      grid-template-columns: subgrid;
+    }
+
+    .caps__row {
+      grid-column: 1 / -1;
+      grid-template-columns: subgrid;
+      padding-block: 2.25rem;
+    }
+
+    .caps__n {
+      grid-column: 1;
+      padding-top: 0.75em;
+    }
+
+    .caps__main {
+      grid-column: 2 / span 4;
+    }
+
+    .caps__examples {
+      grid-column: 6 / -1;
+      padding-top: 0.5rem;
+    }
+  }
+
+  /* Questions */
+  .faq {
+    border-top: 1px solid var(--rule);
+  }
+
+  .faq__item {
+    border-bottom: 1px solid var(--rule-faint);
+  }
+
+  .faq__q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    min-height: 2.75rem;
+    padding-block: 1.5rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .faq__q::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__question {
+    font-family: var(--font-display);
+    font-size: clamp(1.375rem, 1.2rem + 0.7vw, 1.875rem);
+    line-height: 1.2;
+    transition: color 0.2s var(--ease);
+  }
+
+  .faq__q:hover .faq__question {
+    color: var(--gold);
+  }
+
+  .faq__icon {
+    position: relative;
+    flex: none;
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+
+  .faq__icon::before,
+  .faq__icon::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--gold);
+    transition: transform 0.3s var(--ease);
+  }
+
+  .faq__icon::after {
+    transform: rotate(90deg);
+  }
+
+  .faq__item[open] .faq__icon::after {
+    transform: rotate(0deg);
+  }
+
+  .faq__a {
+    max-width: 60ch;
+    padding-bottom: 1.75rem;
+  }
+
+  .faq__item::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition:
+      block-size 0.35s var(--ease),
+      content-visibility 0.35s allow-discrete;
+  }
+
+  .faq__item[open]::details-content {
+    block-size: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq__item::details-content {
+      transition: none;
+    }
+  }
+</style>

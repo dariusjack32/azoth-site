@@ -1,0 +1,36 @@
+---
+/**
+ * A page section laid out like an annotated page: an optional margin note
+ * (cols 1–3 on desktop) beside the body (cols 4–12, a subgrid).
+ */
+import SectionLabel from "./SectionLabel.astro";
+
+interface Props {
+  id?: string;
+  label?: string;
+  /** Use "h2" when the label is the section's only heading. */
+  labelAs?: "p" | "h2";
+  class?: string;
+}
+
+const { id, label, labelAs = "p", class: className } = Astro.props;
+const hasMargin = Boolean(label) || Astro.slots.has("margin");
+---
+
+<section id={id} class:list={["section", className]}>
+  <div class="wrap">
+    <div class="section__inner grid">
+      {
+        hasMargin && (
+          <div class="section__margin">
+            {label && <SectionLabel as={labelAs}>{label}</SectionLabel>}
+            <slot name="margin" />
+          </div>
+        )
+      }
+      <div class="section__body">
+        <slot />
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,65 @@
+---
+/** Opening block for interior pages: margin label + page title (+ optional subline and extras). */
+import SectionLabel from "./SectionLabel.astro";
+
+interface Props {
+  label: string;
+  title: string;
+  sub?: string;
+  /** Less space below — for pages where the next block is the point (Contact). */
+  compact?: boolean;
+}
+
+const { label, title, sub, compact = false } = Astro.props;
+---
+
+<header class="page-header">
+  <div class="wrap">
+    <div class:list={["page-header__inner grid", { "page-header__inner--compact": compact }]}>
+      <div class="page-header__margin">
+        <SectionLabel>{label}</SectionLabel>
+      </div>
+      <div class="page-header__body">
+        <h1 class="h-page">{title}</h1>
+        {sub && <p class="page-header__sub lede muted">{sub}</p>}
+        <slot />
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .page-header__inner {
+    row-gap: 1.75rem;
+    padding-block: clamp(3rem, 8vw, 8rem) clamp(4.5rem, 9vw, 8rem);
+  }
+
+  .page-header__inner--compact {
+    padding-bottom: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .page-header__margin,
+  .page-header__body {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  .page-header__sub {
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .page-header__body > :global(* + *) {
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  @media (min-width: 64em) {
+    .page-header__margin {
+      grid-column: 1 / span 3;
+      padding-top: 1.1em;
+    }
+
+    .page-header__body {
+      grid-column: 4 / -1;
+    }
+  }
+</style>

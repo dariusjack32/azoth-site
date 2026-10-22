@@ -1,0 +1,28 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHeader from "../components/PageHeader.astro";
+import { EMAIL } from "../config";
+---
+
+<Base
+  title="Client portal — Azoth & Co."
+  description="The client portal for active Azoth & Co. engagements. Access by invitation."
+  noindex
+>
+  <PageHeader label="Client portal" title="Access by invitation.">
+    <p class="lede portal__text">
+      Project status, documents, and reports for active engagements — in one secure place. The portal opens to clients
+      soon.
+    </p>
+    <p class="muted">
+      Current clients: reach us directly at <a class="text-link" href={`mailto:${EMAIL}`}>{EMAIL}</a>.
+    </p>
+  </PageHeader>
+  {/* The real portal will live at portal.azothandco.com as its own app with real sign-in; repoint the nav link then. */}
+</Base>
+
+<style>
+  .portal__text {
+    max-width: 40ch;
+  }
+</style>

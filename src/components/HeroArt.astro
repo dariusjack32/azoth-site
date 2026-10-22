@@ -1,0 +1,88 @@
+---
+/**
+ * Home hero drawing: the mark set inside its own construction lines (circle, square,
+ * axes) like a drafting sheet. The construction stays under 6% opacity; the mark draws
+ * itself once on load. Geometry matches Mark.astro, scaled ×4.3478 into a 600 box.
+ */
+interface Props {
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div class:list={["hero-art", className]} aria-hidden="true" {...rest}>
+  <svg viewBox="0 0 600 600" fill="none">
+    <g class="hero-art__construction">
+      <circle cx="300" cy="300" r="282.843"></circle>
+      <rect x="100" y="100" width="400" height="400"></rect>
+      <line x1="0" y1="300" x2="600" y2="300"></line>
+      <line x1="300" y1="0" x2="300" y2="600"></line>
+    </g>
+    <g class="hero-art__mark">
+      <circle class="hero-art__circle" cx="300" cy="300" r="200" pathLength="1"></circle>
+      <path class="hero-art__tri" d="M300 100 L473.205 400 L126.795 400 Z" pathLength="1"></path>
+      <path class="hero-art__bar" d="M184.530 300 H415.470" pathLength="1"></path>
+    </g>
+  </svg>
+</div>
+
+<style>
+  .hero-art svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .hero-art svg * {
+    vector-effect: non-scaling-stroke;
+  }
+
+  .hero-art__construction {
+    stroke: var(--bone);
+    stroke-opacity: 0.06;
+    stroke-width: 1;
+  }
+
+  .hero-art__mark {
+    stroke: var(--gold);
+    stroke-width: 1.25;
+    stroke-linejoin: miter;
+  }
+
+  /* A long gap (2) plus an offset just past 1 keeps the start point clean before the draw. */
+  .hero-art__mark > * {
+    stroke-dasharray: 1 2;
+    stroke-dashoffset: 1.001;
+    animation: hero-art-draw var(--dur) var(--ease-draw) var(--delay) forwards;
+  }
+
+  .hero-art__circle {
+    --dur: 1.1s;
+    --delay: 0.15s;
+  }
+
+  .hero-art__tri {
+    --dur: 0.9s;
+    --delay: 0.6s;
+  }
+
+  .hero-art__bar {
+    --dur: 0.45s;
+    --delay: 1.35s;
+  }
+
+  @keyframes hero-art-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-art__mark > * {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
+  }
+</style>

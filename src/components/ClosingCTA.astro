@@ -1,0 +1,56 @@
+---
+import Mark from "./Mark.astro";
+import Button from "./Button.astro";
+---
+
+<section class="cta" aria-labelledby="cta-title">
+  <div class="wrap">
+    <div class="cta__inner grid">
+      <div class="cta__margin">
+        <Mark size={56} />
+      </div>
+      <div class="cta__body">
+        <h2 id="cta-title" class="h-section" data-reveal>Start with a conversation.</h2>
+        <p class="cta__text lede muted" data-reveal style="--i: 1">
+          Thirty minutes. Tell us where the work gets stuck — you’ll leave with at least one thing worth fixing,
+          whether or not we work together.
+        </p>
+        <div class="cta__action" data-reveal style="--i: 2">
+          <Button href="/contact/">Book a call</Button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta__inner {
+    row-gap: 2.5rem;
+    padding-block: var(--section-y);
+    border-top: 1px solid var(--rule);
+  }
+
+  .cta__margin,
+  .cta__body {
+    grid-column: 1 / -1;
+  }
+
+  .cta__text {
+    margin-top: 1.75rem;
+  }
+
+  .cta__action {
+    margin-top: 2.75rem;
+  }
+
+  @media (min-width: 64em) {
+    .cta__margin {
+      grid-column: 1 / span 3;
+      padding-top: 0.6rem;
+    }
+
+    .cta__body {
+      grid-column: 4 / -1;
+    }
+  }
+</style>

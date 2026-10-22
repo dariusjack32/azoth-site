@@ -1,0 +1,12 @@
+---
+/** The small mono note that sits in a section's margin column. */
+interface Props {
+  as?: "p" | "h2" | "span";
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { as: Tag = "p", class: className, ...rest } = Astro.props;
+---
+
+<Tag class:list={["label", className]} {...rest}><slot /></Tag>

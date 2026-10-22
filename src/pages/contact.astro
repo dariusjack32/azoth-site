@@ -1,0 +1,215 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHeader from "../components/PageHeader.astro";
+import SectionLabel from "../components/SectionLabel.astro";
+import Mark from "../components/Mark.astro";
+import { CAL_LINK, EMAIL } from "../config";
+
+// Cal.com wants "handle/event" plus the origin it's hosted on.
+const cal = CAL_LINK ? new URL(CAL_LINK) : null;
+const calLink = cal ? cal.pathname.replace(/^\/+|\/+$/g, "") : "";
+const calOrigin = cal ? cal.origin : "";
+const isDev = import.meta.env.DEV;
+---
+
+<Base
+  title="Book a call — Azoth & Co."
+  description="Book a thirty-minute call with Azoth & Co. No pitch deck — tell us where the work gets stuck."
+>
+  <PageHeader
+    label="Contact"
+    title="Book a call."
+    sub="Thirty minutes. No pitch deck. Tell us where the work gets stuck."
+    compact
+  />
+
+  <section class="contact" aria-label="Scheduling">
+    <div class="wrap">
+      <div class="contact__inner grid">
+        <div class="contact__expect">
+          <SectionLabel as="h2">What to expect</SectionLabel>
+          <ol class="expect" role="list">
+            <li><span class="expect__n label">1</span><span>We listen: how work moves today, and where it stalls.</span></li>
+            <li>
+              <span class="expect__n label">2</span><span>We identify the one or two fixes likely to matter most.</span>
+            </li>
+            <li>
+              <span class="expect__n label">3</span><span>You leave with a clear next step — with us or without us.</span>
+            </li>
+          </ol>
+        </div>
+
+        <div class="contact__main">
+          {
+            cal ? (
+              <>
+                <div id="cal-booker" class="booker" role="region" aria-label="Booking calendar"></div>
+                <p class="booker__fallback">
+                  <a class="text-link" href={CAL_LINK}>
+                    Calendar not loading? Open it directly.
+                  </a>
+                </p>
+              </>
+            ) : (
+              <div class="booker booker--empty">
+                <Mark size={48} />
+                <p class="lede">The booking calendar opens here soon.</p>
+                <p class="muted">
+                  Until then, email{" "}
+                  <a class="text-link" href={`mailto:${EMAIL}`}>
+                    {EMAIL}
+                  </a>{" "}
+                  and we’ll find a time.
+                </p>
+                {isDev && <p class="label">Dev note: set CAL_LINK in src/config.ts to show the calendar.</p>}
+              </div>
+            )
+          }
+
+          <div class="contact__lines">
+            <p>
+              <span class="label">Prefer email?</span>{" "}
+              <a class="text-link" href={`mailto:${EMAIL}`}>
+                {EMAIL}
+              </a>
+            </p>
+            <p>Assistants are welcome to schedule on your behalf.</p>
+            <p class="muted">Based in Dallas–Fort Worth. Working with clients nationwide.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {
+    cal && (
+      <script is:inline define:vars={{ calLink, calOrigin }}>
+        (function (C, A, L) {
+          let p = function (a, ar) {
+            a.q.push(ar);
+          };
+          let d = C.document;
+          C.Cal =
+            C.Cal ||
+            function () {
+              let cal = C.Cal;
+              let ar = arguments;
+              if (!cal.loaded) {
+                cal.ns = {};
+                cal.q = cal.q || [];
+                d.head.appendChild(d.createElement("script")).src = A;
+                cal.loaded = true;
+              }
+              if (ar[0] === L) {
+                const api = function () {
+                  p(api, arguments);
+                };
+                const namespace = ar[1];
+                api.q = api.q || [];
+                if (typeof namespace === "string") {
+                  cal.ns[namespace] = cal.ns[namespace] || api;
+                  p(cal.ns[namespace], ar);
+                  p(cal, ["initNamespace", namespace]);
+                } else p(cal, ar);
+                return;
+              }
+              p(cal, ar);
+            };
+        })(window, "https://app.cal.com/embed/embed.js", "init");
+
+        Cal("init", "intro", { origin: calOrigin });
+        Cal.ns.intro("inline", {
+          elementOrSelector: "#cal-booker",
+          calLink: calLink,
+          config: { layout: "month_view", theme: "dark" },
+        });
+        Cal.ns.intro("ui", {
+          theme: "dark",
+          cssVarsPerTheme: { dark: { "cal-brand": "#B8A06A" } },
+          hideEventTypeDetails: false,
+          layout: "month_view",
+        });
+      </script>
+    )
+  }
+</Base>
+
+<style>
+  /* The calendar is the point of this page, so it sits closer to the title than other sections do. */
+  .contact__inner {
+    row-gap: 3.5rem;
+    padding-block: clamp(2.5rem, 5vw, 4.5rem) var(--section-y);
+    border-top: 1px solid var(--rule);
+  }
+
+  .contact__expect,
+  .contact__main {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  /* On small screens the calendar comes first; the notes follow. */
+  .contact__expect {
+    order: 2;
+  }
+
+  .expect {
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--rule-faint);
+  }
+
+  .expect li {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    padding-block: 1.1rem;
+    border-bottom: 1px solid var(--rule-faint);
+  }
+
+  .expect__n {
+    padding-top: 0.25em;
+    color: var(--gold);
+  }
+
+  .booker {
+    width: 100%;
+    min-height: 38rem;
+    overflow: auto;
+    border: 1px solid var(--rule);
+    background: var(--ink);
+  }
+
+  .booker--empty {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 1.25rem;
+    min-height: 26rem;
+    padding: clamp(2rem, 5vw, 4rem);
+  }
+
+  .booker__fallback {
+    margin-top: 1rem;
+    font-size: 0.9375rem;
+  }
+
+  .contact__lines {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 2.5rem;
+  }
+
+  @media (min-width: 64em) {
+    .contact__expect {
+      grid-column: 1 / span 3;
+      order: 0;
+      align-self: start;
+      position: sticky;
+      top: 2.5rem;
+    }
+
+    .contact__main {
+      grid-column: 4 / -1;
+    }
+  }
+</style>

@@ -1,0 +1,89 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHeader from "../components/PageHeader.astro";
+import Section from "../components/Section.astro";
+import { BRAND, EMAIL, LEGAL_NAME, LOCATION, PRIVACY_REVIEWED } from "../config";
+---
+
+<Base title="Privacy — Azoth & Co." description="How Azoth & Co. handles information from bookings and email.">
+  <PageHeader label="Privacy" title="How we handle your information." sub="Last updated October 2026.">
+    {!PRIVACY_REVIEWED && <p class="draft-note label">[Draft — review before launch]</p>}
+  </PageHeader>
+
+  <Section label="The short version">
+    <p class="statement">
+      This site sets no cookies of its own and runs no analytics. We only collect what you choose to send us.
+    </p>
+  </Section>
+
+  <Section label="Details">
+    <div class="policy">
+      <section>
+        <h2 class="h-item">What we collect</h2>
+        <p>
+          When you book a call, our scheduling provider, Cal.com, collects the details you enter — such as your name,
+          email address, and anything you choose to tell us — and shares them with us so we can meet. When you email
+          us, we receive your message and address.
+        </p>
+      </section>
+      <section>
+        <h2 class="h-item">How we use it</h2>
+        <p>
+          Only to respond to you, arrange and hold conversations, and deliver work you engage us for. We don’t sell
+          personal information, and we don’t use it for advertising.
+        </p>
+      </section>
+      <section>
+        <h2 class="h-item">Who else sees it</h2>
+        <p>
+          The service providers that help us run the business, such as our email and scheduling providers, and anyone
+          the law requires. The booking calendar on our Contact page is provided by Cal.com and may use its own cookies
+          to work; its privacy policy covers that.
+        </p>
+      </section>
+      <section>
+        <h2 class="h-item">How long we keep it</h2>
+        <p>As long as needed for the purposes above, then we delete it.</p>
+      </section>
+      <section>
+        <h2 class="h-item">Your choices</h2>
+        <p>
+          To see what we hold about you, or to have it corrected or deleted, email
+          <a class="text-link" href={`mailto:${EMAIL}`}>{EMAIL}</a>.
+        </p>
+      </section>
+      <section>
+        <h2 class="h-item">Changes and contact</h2>
+        <p>
+          If this policy changes, we’ll update this page and its date. {BRAND} is operated by {LEGAL_NAME}, {LOCATION}.
+        </p>
+      </section>
+    </div>
+  </Section>
+</Base>
+
+<style>
+  .draft-note {
+    display: inline-block;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+  }
+
+  .policy {
+    display: grid;
+    gap: 2.75rem;
+    max-width: var(--measure);
+  }
+
+  .policy p {
+    margin-top: 0.9rem;
+    color: var(--ash);
+  }
+
+  @media (min-width: 64em) {
+    .policy {
+      grid-column: 1 / span 6;
+    }
+  }
+</style>
