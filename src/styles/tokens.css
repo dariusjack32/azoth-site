@@ -4,8 +4,8 @@
   color-scheme: dark;
 
   /* Color */
-  --obsidian: #131209; /* page background */
-  --ink: #1a1910; /* raised surfaces */
+  --obsidian: #000000; /* page background */
+  --ink: #0f0e0b; /* raised surfaces */
   --bone: #ece8e0; /* primary text */
   --ash: #8c887f; /* secondary text */
   --gold: #c8ae73; /* the only accent: hairlines, the mark, focus and hover */
