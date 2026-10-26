@@ -98,7 +98,9 @@ const faqJson = JSON.stringify({
 
   <section class="thesis" aria-label="Our thesis">
     <div class="wrap">
-      <p class="thesis__text" data-thesis>Your most expensive people should not be doing your cheapest work.</p>
+      <div class="thesis__inner grid">
+        <p class="thesis__text" data-thesis>Your most expensive people should not be doing your cheapest work.</p>
+      </div>
     </div>
   </section>
 
@@ -387,19 +389,27 @@ const faqJson = JSON.stringify({
   }
 
   /* Thesis: words brighten one at a time on scroll */
-  .thesis {
+  .thesis__inner {
     padding-block: clamp(5rem, 12vw, 10rem);
     border-top: 1px solid var(--rule);
   }
 
   .thesis__text {
-    max-width: 18ch;
+    grid-column: 1 / -1;
+    max-width: 24ch;
     font-family: var(--font-display);
     font-size: var(--step-3);
     font-weight: 400;
     line-height: 1.04;
     letter-spacing: -0.012em;
     text-wrap: balance;
+  }
+
+  @media (min-width: 64em) {
+    .thesis__text {
+      grid-column: 4 / -1;
+      max-width: none;
+    }
   }
 
   .thesis__text :global(.thesis__w) {
