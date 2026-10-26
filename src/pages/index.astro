@@ -3,65 +3,126 @@ import Base from "../layouts/Base.astro";
 import Section from "../components/Section.astro";
 import SectionLabel from "../components/SectionLabel.astro";
 import Button from "../components/Button.astro";
-import HeroArt from "../components/HeroArt.astro";
-import ArrowDown from "../components/ArrowDown.astro";
 import ClosingCTA from "../components/ClosingCTA.astro";
-import { audiences, capabilities, principles, stages } from "../data/copy";
+import { audiences, capabilities, faq, principles, stages } from "../data/copy";
+import { CAL_LINK } from "../config";
+
+const faqJson = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faq.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: { "@type": "Answer", text: item.a },
+  })),
+}).replace(/</g, "\\u003c");
 ---
 
 <Base
   title="Azoth & Co. — Operations, rebuilt."
-  description="AI and operations consulting. We turn manual processes into systems your people actually use — diagnosed, built, and kept running, end to end."
+  description="AI and operations consulting for firms whose work still runs on people retyping, chasing and rebuilding. We diagnose where the hours go, build the systems that recover them, and run them with you."
 >
+  <script is:inline type="application/ld+json" set:html={faqJson} slot="head" />
+
   <section class="hero" aria-labelledby="hero-title">
     <div class="wrap">
-      <div class="hero__grid">
-        <div class="hero__copy">
-          <SectionLabel>AI &amp; Operations Consulting</SectionLabel>
-          <h1 id="hero-title" class="hero__title">
-            <span class="hero__line">Operations,</span>
-            <span class="hero__line hero__line--indent">rebuilt.</span>
-          </h1>
-          <p class="hero__sub">
-            Azoth &amp; Co. turns manual processes into <span class="nowrap">AI-powered</span> systems your people actually
-            use — diagnosed, built, and kept running, end to end.
-          </p>
-          <div class="hero__actions">
-            <Button href="/contact/">Book a call</Button>
-            <a class="link" href="#how">How we work <ArrowDown /></a>
-          </div>
+      <SectionLabel class="hero__label">AI &amp; Operations Consulting · Dallas–Fort Worth</SectionLabel>
+      <h1 id="hero-title" class="hero__title">Operations, rebuilt.</h1>
+      <p class="hero__sub">
+        An AI and operations practice for firms whose work still runs on people retyping, chasing and rebuilding. We
+        diagnose where the hours go, build the systems that recover them, and run those systems with you.
+      </p>
+      <div class="hero__actions">
+        <Button href={CAL_LINK}>Book a conversation</Button>
+        <p class="hero__note muted">Confidential by default. NDA before discovery.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="engage" aria-labelledby="engage-title">
+    <div class="wrap">
+      <div class="engage__inner grid">
+        <div class="engage__lead" data-reveal>
+          <SectionLabel>Engagement</SectionLabel>
+          <h2 id="engage-title" class="engage__title">Every engagement begins with a diagnosis, not a proposal.</h2>
         </div>
-        <HeroArt class="hero__art" />
+        <ol class="engage__steps" role="list">
+          <li class="engage__step" data-reveal style="--i: 1">
+            <h3 class="engage__name">A conversation</h3>
+            <p class="muted">
+              Thirty minutes on how work moves through your firm and where it stalls. We will tell you plainly whether we
+              are the right people for it.
+            </p>
+          </li>
+          <li class="engage__step" data-reveal style="--i: 2">
+            <h3 class="engage__name">An Assay</h3>
+            <p class="muted">
+              A fixed fee diagnosis with a written blueprint, priced before it starts and prioritized by return.
+            </p>
+          </li>
+          <li class="engage__step" data-reveal style="--i: 3">
+            <h3 class="engage__name">A decision made on evidence</h3>
+            <p class="muted">
+              Build with us, build with your own team from the blueprint, or stop there. The work is yours either way.
+            </p>
+          </li>
+        </ol>
       </div>
     </div>
   </section>
 
   <Section id="problem" label="The cost of manual">
-    <h2 class="h-section" data-reveal>Your most expensive people are doing your cheapest work.</h2>
-    <ul class="symptoms" role="list">
-      <li data-reveal style="--i: 0">Re-keying data between systems.</li>
-      <li data-reveal style="--i: 1">Chasing updates over email.</li>
-      <li data-reveal style="--i: 2">Rebuilding the same report every month.</li>
-      <li data-reveal style="--i: 3">Knowledge that lives in one person’s head.</li>
-    </ul>
-    <p class="problem__close lede" data-reveal>
-      None of it shows up as a line item — it’s paid for in late nights, avoidable errors, and decisions made on stale
-      numbers.
+    <h2 class="h-section" data-reveal>The leaks never show up as a line item.</h2>
+    <p class="lede muted" data-reveal style="--i: 1">
+      They show up as overtime, errors and decisions made on last month’s numbers.
     </p>
+    <ul class="leaks" role="list">
+      <li class="leak" data-reveal style="--i: 0">
+        <h3 class="h-item">The same data typed twice</h3>
+        <p class="muted">Orders, invoices and intake forms copied between systems by people you hired for judgment.</p>
+      </li>
+      <li class="leak" data-reveal style="--i: 1">
+        <h3 class="h-item">Status that lives in email</h3>
+        <p class="muted">Approvals depend on someone remembering to follow up, so work stalls quietly.</p>
+      </li>
+      <li class="leak" data-reveal style="--i: 2">
+        <h3 class="h-item">The monthly report, from scratch</h3>
+        <p class="muted">Exports, pivots and pasted charts, rebuilt every period and never quite matching the last.</p>
+      </li>
+      <li class="leak" data-reveal style="--i: 3">
+        <h3 class="h-item">Knowledge held by one person</h3>
+        <p class="muted">When they are out, the process is out. Nothing is written down because there was never time.</p>
+      </li>
+    </ul>
   </Section>
 
+  <section class="thesis" aria-label="Our thesis">
+    <div class="wrap">
+      <p class="thesis__text" data-thesis>Your most expensive people should not be doing your cheapest work.</p>
+    </div>
+  </section>
+
   <Section id="how" label="How we work">
-    <h2 class="h-section" data-reveal>Diagnose. Build. Keep it running.</h2>
+    <h2 class="h-section" data-reveal>Diagnose, build, then run it with you.</h2>
+    <p class="lede muted" data-reveal style="--i: 1">Three stages. Stop after any of them and keep what you have.</p>
     <ol class="stages" role="list">
       {
         stages.map((stage, i) => (
           <li class="stage" data-reveal style={`--i: ${i}`}>
-            <p class="stage__numeral" aria-hidden="true">
-              {stage.numeral}
-            </p>
-            <h3 class="stage__name h-item">{stage.name}</h3>
-            <p class="stage__descriptor label">{stage.descriptor}</p>
-            <p class="stage__text muted">{stage.summary}</p>
+            <div class="stage__head">
+              <p class="stage__numeral" aria-hidden="true">
+                {stage.numeral}
+              </p>
+              <p class="stage__descriptor label">{stage.descriptor}</p>
+            </div>
+            <div class="stage__body">
+              <h3 class="stage__name h-item">{stage.name}</h3>
+              <p class="stage__text muted">{stage.summary}</p>
+              <p class="stage__keep">
+                <span class="label stage__keep-label">You keep</span>
+                {stage.keep}
+              </p>
+            </div>
           </li>
         ))
       }
@@ -72,14 +133,11 @@ import { audiences, capabilities, principles, stages } from "../data/copy";
   </Section>
 
   <Section id="build" label="What we build">
-    <h2 class="h-section" data-reveal>Systems, not slide decks.</h2>
+    <h2 class="h-section" data-reveal>Systems your staff will actually use.</h2>
     <ol class="ledger" role="list">
       {
         capabilities.map((item) => (
           <li class="ledger__row" data-reveal>
-            <span class="ledger__n label" aria-hidden="true">
-              {item.n}
-            </span>
             <h3 class="ledger__title h-item">{item.title}</h3>
             <p class="ledger__text muted">{item.text}</p>
           </li>
@@ -88,83 +146,131 @@ import { audiences, capabilities, principles, stages } from "../data/copy";
     </ol>
   </Section>
 
-  <Section id="who" label="Who we work with">
-    <h2 class="h-section" data-reveal>Firms where time is expensive.</h2>
-    <ul class="audiences" role="list">
-      {
-        audiences.map((audience, i) => (
-          <li class="audience" data-reveal style={`--i: ${i}`}>
-            <h3 class="h-item">{audience.title}</h3>
-            <p class="audience__text muted">{audience.text}</p>
-          </li>
-        ))
-      }
-    </ul>
-  </Section>
+  <section class="band" aria-label="Who we work with and what you can hold us to">
+    <div class="wrap">
+      <div class="band__inner grid">
+        <div class="band__col" data-reveal>
+          <h2 class="band__title">Who we work with</h2>
+          <ul class="band__list" role="list">
+            {
+              audiences.map((audience) => (
+                <li>
+                  <h3 class="band__item">{audience.title}</h3>
+                  <p class="muted">{audience.text}</p>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="band__col" data-reveal style="--i: 1">
+          <h2 class="band__title">What you can hold us to</h2>
+          <ul class="band__list" role="list">
+            {
+              principles.map((principle) => (
+                <li>
+                  <h3 class="band__item">{principle.title}</h3>
+                  <p class="muted">{principle.text}</p>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <Section id="principles" label="Principles" labelAs="h2">
-    <ul class="principles" role="list">
+  <Section id="faq" label="Questions">
+    <h2 class="h-section" data-reveal>Before we speak.</h2>
+    <div class="faq" data-reveal style="--i: 1">
       {
-        principles.map((principle, i) => (
-          <li class="principle" data-reveal style={`--i: ${i % 2}`}>
-            <h3 class="h-item">{principle.title}</h3>
-            <p class="principle__text muted">{principle.text}</p>
-          </li>
+        faq.map((item) => (
+          <details class="faq__item">
+            <summary class="faq__q">
+              <span>{item.q}</span>
+              <span class="faq__pm" aria-hidden="true" />
+            </summary>
+            <p class="faq__a muted">{item.a}</p>
+          </details>
         ))
       }
-    </ul>
+    </div>
   </Section>
 
   <ClosingCTA />
 </Base>
 
+<script is:inline>
+  (() => {
+    const el = document.querySelector("[data-thesis]");
+    if (!el) return;
+    const words = el.textContent.trim().split(/\s+/);
+    el.textContent = "";
+    const spans = words.map((w, i) => {
+      const s = document.createElement("span");
+      s.className = "thesis__w";
+      s.textContent = w;
+      el.appendChild(s);
+      if (i < words.length - 1) el.appendChild(document.createTextNode(" "));
+      return s;
+    });
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      spans.forEach((s) => s.classList.add("is-on"));
+      return;
+    }
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const line = innerHeight * 0.62;
+      const r = el.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, (line - r.top) / (r.height + innerHeight * 0.25)));
+      const n = Math.round(p * spans.length);
+      spans.forEach((s, i) => s.classList.toggle("is-on", i < n));
+    };
+    addEventListener(
+      "scroll",
+      () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      },
+      { passive: true },
+    );
+    update();
+  })();
+</script>
+
 <style>
-  /* Hero */
+  /* Hero: type only, one column */
   .hero {
-    padding-block: clamp(1.5rem, 5vw, 3rem) clamp(3.5rem, 7vw, 6rem);
+    padding-block: clamp(4rem, 10vw, 9rem) clamp(4rem, 8vw, 7rem);
   }
 
-  .hero__grid {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    column-gap: var(--col-gap);
-    align-items: center;
-  }
-
-  .hero__copy {
-    grid-column: 1 / -1;
-    grid-row: 2;
-  }
-
-  .hero__art {
-    grid-column: 1 / -1;
-    grid-row: 1;
-    width: min(66vw, 20rem);
-    margin-bottom: clamp(2rem, 7vw, 3.5rem);
+  .hero__label {
+    color: var(--gold);
   }
 
   .hero__title {
     margin-top: 1.75rem;
     font-family: var(--font-display);
     font-size: var(--step-hero);
-    font-weight: 300;
-    line-height: 0.94;
+    font-weight: 400;
+    line-height: 0.96;
     letter-spacing: -0.022em;
-  }
-
-  .hero__line {
-    display: block;
-  }
-
-  .hero__line--indent {
-    padding-left: 0.9em;
+    background: linear-gradient(90deg, #ffffff, #9b9b9b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    width: fit-content;
+    max-width: 100%;
   }
 
   .hero__sub {
-    max-width: 33rem;
+    max-width: 38rem;
     margin-top: clamp(2rem, 4vw, 2.75rem);
     font-size: var(--step-1);
-    line-height: 1.5;
+    line-height: 1.45;
+    color: var(--ash);
     text-wrap: pretty;
   }
 
@@ -172,129 +278,222 @@ import { audiences, capabilities, principles, stages } from "../data/copy";
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 1.25rem 2.25rem;
+    gap: 1.25rem 2rem;
     margin-top: clamp(2.25rem, 4vw, 3rem);
   }
 
+  .hero__note {
+    font-size: 0.9375rem;
+  }
+
+  /* Engagement */
+  .engage__inner {
+    row-gap: 2.5rem;
+    padding-block: clamp(3.5rem, 7vw, 5.5rem);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .engage__lead,
+  .engage__steps {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  .engage__title {
+    max-width: 18ch;
+    margin-top: 1rem;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: -0.008em;
+    text-wrap: balance;
+  }
+
+  .engage__step {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.4rem 2rem;
+    padding-block: 1.25rem;
+    border-top: 1px solid var(--rule-faint);
+  }
+
+  .engage__step:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .engage__name {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  .engage__step p {
+    max-width: 48ch;
+    text-wrap: pretty;
+  }
+
+  @media (min-width: 48em) {
+    .engage__step {
+      grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+    }
+  }
+
   @media (min-width: 64em) {
-    .hero__grid {
-      min-height: min(calc(100svh - var(--header-h) - 3rem), 56rem);
+    .engage__lead {
+      grid-column: 1 / span 4;
     }
 
-    .hero__copy {
-      grid-column: 1 / span 7;
-      grid-row: 1;
-    }
-
-    .hero__art {
-      grid-column: 8 / -1;
-      grid-row: 1;
-      justify-self: end;
-      width: 100%;
-      max-width: 36rem;
-      margin: 0;
+    .engage__steps {
+      grid-column: 6 / -1;
     }
   }
 
   /* The cost of manual */
-  .symptoms {
+  .leak {
+    padding-block: 1.75rem;
     border-top: 1px solid var(--rule-faint);
   }
 
-  .symptoms li {
-    padding-block: 1.35rem;
-    border-bottom: 1px solid var(--rule-faint);
-    font-family: var(--font-display);
-    font-size: var(--step-2);
-    line-height: 1.15;
+  .leak p {
+    max-width: 40ch;
+    margin-top: 0.6rem;
+    text-wrap: pretty;
   }
 
   @media (min-width: 48em) {
-    .symptoms {
+    .leaks {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       column-gap: var(--col-gap);
-      border-top: 0;
-    }
-
-    .symptoms li:nth-child(-n + 2) {
-      border-top: 1px solid var(--rule-faint);
     }
   }
 
-  /* On desktop the 2×2 snaps to the page grid, and the closing line hangs from its second column. */
   @media (min-width: 64em) {
-    .symptoms {
+    .leaks {
       grid-template-columns: subgrid;
     }
 
-    .symptoms li:nth-child(odd) {
+    .leak:nth-child(odd) {
       grid-column: 1 / span 4;
     }
 
-    .symptoms li:nth-child(even) {
-      grid-column: 5 / -1;
-    }
-
-    .problem__close {
+    .leak:nth-child(even) {
       grid-column: 5 / -1;
     }
   }
 
-  /* How we work */
-  .stage {
-    padding-block: 2rem 2.25rem;
+  /* Thesis: words brighten one at a time on scroll */
+  .thesis {
+    padding-block: clamp(5rem, 12vw, 10rem);
     border-top: 1px solid var(--rule);
+  }
+
+  .thesis__text {
+    max-width: 18ch;
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 400;
+    line-height: 1.04;
+    letter-spacing: -0.012em;
+    text-wrap: balance;
+  }
+
+  .thesis__text :global(.thesis__w) {
+    opacity: 0.3;
+    transition: opacity 0.5s var(--ease);
+  }
+
+  .thesis__text :global(.thesis__w.is-on) {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .thesis__text :global(.thesis__w) {
+      opacity: 1;
+      transition: none;
+    }
+  }
+
+  /* How we work: numerals in a left column */
+  .stages {
+    border-top: 1px solid var(--rule);
+  }
+
+  .stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem 2rem;
+    padding-block: 2rem;
+    border-bottom: 1px solid var(--rule-faint);
+  }
+
+  .stage__head {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
   }
 
   .stage__numeral {
     color: var(--gold);
     font-family: var(--font-display);
-    font-size: clamp(3.5rem, 2.6rem + 3vw, 6rem);
-    font-weight: 300;
+    font-size: var(--step-2);
+    font-weight: 400;
     line-height: 1;
   }
 
-  .stage__name {
-    margin-top: 1.5rem;
-  }
-
-  .stage__descriptor {
-    margin-top: 0.55rem;
-  }
-
   .stage__text {
-    max-width: 36ch;
-    margin-top: 1.5rem;
+    max-width: 52ch;
+    margin-top: 0.75rem;
+    text-wrap: pretty;
   }
 
-  @media (min-width: 56em) {
-    .stages {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      column-gap: var(--col-gap);
-    }
+  .stage__keep {
+    margin-top: 1rem;
+    max-width: 52ch;
+  }
 
+  .stage__keep-label {
+    display: inline;
+    margin-right: 0.6em;
+    color: var(--gold);
+  }
+
+  .how__more {
+    margin-top: -0.5rem;
+  }
+
+  @media (min-width: 48em) {
     .stage {
-      padding-block: 0.25rem 0;
-      padding-left: clamp(1.25rem, 2.2vw, 2.25rem);
-      border-top: 0;
-      border-left: 1px solid var(--rule);
+      grid-template-columns: 7rem minmax(0, 1fr);
     }
 
-    .stage:first-child {
-      padding-left: 0;
-      border-left: 0;
+    .stage__head {
+      flex-direction: column;
+      gap: 0.35rem;
     }
   }
 
   @media (min-width: 64em) {
     .stages {
+      display: grid;
       grid-template-columns: subgrid;
     }
 
     .stage {
-      grid-column: span 3;
+      grid-column: 1 / -1;
+      grid-template-columns: subgrid;
+    }
+
+    .stage__head {
+      grid-column: 1 / span 2;
+    }
+
+    .stage__body {
+      grid-column: 3 / -1;
     }
   }
 
@@ -305,25 +504,15 @@ import { audiences, capabilities, principles, stages } from "../data/copy";
 
   .ledger__row {
     display: grid;
-    grid-template-columns: 2.75rem minmax(0, 1fr);
-    column-gap: 1rem;
-    row-gap: 0.7rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem 2rem;
     padding-block: 1.75rem;
     border-bottom: 1px solid var(--rule-faint);
   }
 
-  .ledger__n {
-    padding-top: 0.6em;
-    color: var(--gold);
-  }
-
-  .ledger__title,
-  .ledger__text {
-    grid-column: 2;
-  }
-
   .ledger__text {
     max-width: 46ch;
+    text-wrap: pretty;
   }
 
   @media (min-width: 64em) {
@@ -336,95 +525,134 @@ import { audiences, capabilities, principles, stages } from "../data/copy";
       grid-column: 1 / -1;
       grid-template-columns: subgrid;
       align-items: baseline;
-      padding-block: 2.25rem;
-    }
-
-    .ledger__n {
-      grid-column: 1;
-      padding-top: 0;
+      padding-block: 2rem;
     }
 
     .ledger__title {
-      grid-column: 2 / span 4;
+      grid-column: 1 / span 4;
     }
 
     .ledger__text {
-      grid-column: 6 / -1;
+      grid-column: 5 / -1;
     }
   }
 
-  /* Who we work with */
-  .audience {
-    padding-block: 1.75rem 2rem;
+  /* Who + principles */
+  .band__inner {
+    row-gap: 3rem;
+    padding-block: var(--section-y);
+    border-top: 1px solid var(--rule);
+  }
+
+  .band__col {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  .band__title {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: -0.008em;
+  }
+
+  .band__list {
+    margin-top: 1.5rem;
+  }
+
+  .band__list li {
+    padding-block: 1rem;
     border-top: 1px solid var(--rule-faint);
   }
 
-  .audience__text {
-    max-width: 30ch;
-    margin-top: 0.9rem;
+  .band__item {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 500;
+    line-height: 1.3;
   }
 
-  @media (min-width: 56em) {
-    .audiences {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      column-gap: var(--col-gap);
-    }
+  .band__list p {
+    margin-top: 0.25rem;
+    max-width: 44ch;
+    text-wrap: pretty;
   }
 
   @media (min-width: 64em) {
-    .audiences {
-      grid-template-columns: subgrid;
+    .band__col:first-child {
+      grid-column: 1 / span 5;
     }
 
-    .audience {
-      grid-column: span 3;
+    .band__col:last-child {
+      grid-column: 7 / -1;
     }
   }
 
-  /* Principles — a 2×2, quartered by hairlines */
-  .principle {
-    padding-block: 2rem;
+  /* FAQ */
+  .faq {
+    max-width: 60rem;
+  }
+
+  .faq__item {
     border-top: 1px solid var(--rule-faint);
   }
 
-  .principle:first-child {
-    padding-top: 0;
-    border-top: 0;
+  .faq__item:last-child {
+    border-bottom: 1px solid var(--rule-faint);
   }
 
-  .principle__text {
-    max-width: 38ch;
-    margin-top: 1rem;
+  .faq__q {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-block: 1.4rem;
+    list-style: none;
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 400;
+    line-height: 1.3;
+    transition: color 0.2s var(--ease);
   }
 
-  @media (min-width: 48em) {
-    .principles {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+  .faq__q::-webkit-details-marker {
+    display: none;
+  }
 
-    .principle {
-      padding: clamp(2rem, 4vw, 3.25rem);
-      border-top: 0;
-    }
+  .faq__q:hover {
+    color: var(--gold);
+  }
 
-    .principle:nth-child(odd) {
-      padding-left: 0;
-      border-right: 1px solid var(--rule);
-    }
+  .faq__pm {
+    position: relative;
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-top: 0.1em;
+  }
 
-    .principle:nth-child(even) {
-      padding-right: 0;
-    }
+  .faq__pm::before,
+  .faq__pm::after {
+    content: "";
+    position: absolute;
+    inset: 0.7rem 0.25rem auto;
+    height: 1px;
+    background: var(--gold);
+    transition: transform 0.4s var(--ease);
+  }
 
-    .principle:nth-child(-n + 2) {
-      padding-top: 0;
-      border-bottom: 1px solid var(--rule);
-    }
+  .faq__pm::after {
+    transform: rotate(90deg);
+  }
 
-    .principle:nth-child(n + 3) {
-      padding-bottom: 0;
-    }
+  .faq__item[open] .faq__pm::after {
+    transform: rotate(0);
+  }
+
+  .faq__a {
+    max-width: 60ch;
+    padding-bottom: 1.5rem;
+    text-wrap: pretty;
   }
 </style>

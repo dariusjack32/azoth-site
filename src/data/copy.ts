@@ -10,7 +10,8 @@ export const stages = [
     name: "Assay",
     descriptor: "Diagnose",
     summary:
-      "We map how work actually moves through your firm — the systems, the spreadsheets, the workarounds — and find where time, money, and accuracy leak. Fixed scope, fixed fee. You leave with a prioritized blueprint, whether or not we build it.",
+      "We map how work actually moves through your firm and measure where time, money and accuracy leak out. Fixed scope, fixed fee.",
+    keep: "A prioritized blueprint, whether or not we build it.",
   },
   {
     id: "opus",
@@ -18,7 +19,8 @@ export const stages = [
     name: "Opus",
     descriptor: "Build",
     summary:
-      "We build the fixes: automations, AI agents, integrations, and internal tools, designed around how your people already work. Delivered in stages, so value shows up early.",
+      "Automations, AI agents, integrations and internal tools, shipped in stages on the software you already pay for and designed around how your people already work.",
+    keep: "Code, accounts and documentation. No lock-in.",
   },
   {
     id: "stewardship",
@@ -26,7 +28,8 @@ export const stages = [
     name: "Stewardship",
     descriptor: "Run",
     summary:
-      "We keep it running, measure it, and improve it every month. Everything is documented and yours. No black boxes, no lock-in.",
+      "We operate, measure and improve the systems every month, so they keep up as the business changes.",
+    keep: "The option to end it any time and run it yourself.",
   },
 ];
 
@@ -34,7 +37,7 @@ export const capabilities = [
   {
     n: "01",
     title: "Workflow automation & AI agents",
-    text: "The repetitive work between your tools: intake, routing, follow-ups, approvals.",
+    text: "The handoffs between inboxes, spreadsheets and systems, done by software that logs every step.",
     examples: [
       "Intake and routing for new requests",
       "Follow-ups and reminders that send themselves",
@@ -44,7 +47,7 @@ export const capabilities = [
   {
     n: "02",
     title: "Reporting & a single source of truth",
-    text: "Numbers that live in five places, consolidated into live dashboards and automatic reports.",
+    text: "One place the numbers live, so reports are current when you open them.",
     examples: [
       "Portfolio and pipeline reporting",
       "Automated weekly and monthly updates",
@@ -54,7 +57,7 @@ export const capabilities = [
   {
     n: "03",
     title: "Document intelligence",
-    text: "Contracts, filings, invoices, and updates: extracted, organized, summarized.",
+    text: "Invoices, contracts and forms read, checked and filed into the right system.",
     examples: [
       "Data extraction from PDFs, contracts, and filings",
       "Summaries of long documents and periodic updates",
@@ -64,7 +67,7 @@ export const capabilities = [
   {
     n: "04",
     title: "Internal tools & portals",
-    text: "Purpose-built software when off-the-shelf won’t fit.",
+    text: "Small, focused apps for the jobs your current software handles badly.",
     examples: [
       "Client and partner portals",
       "Tools built around one team’s workflow",
@@ -74,7 +77,7 @@ export const capabilities = [
   {
     n: "05",
     title: "AI enablement",
-    text: "Training, playbooks, and guardrails so your team uses AI well, and safely.",
+    text: "Training, playbooks and guardrails, so your team uses AI well and keeps confidential data out of consumer tools.",
     examples: ["Team AI training", "Usage policies and guardrails", "Personal AI workflows for leaders"],
   },
 ];
@@ -82,33 +85,60 @@ export const capabilities = [
 export const audiences = [
   {
     title: "Investment & professional firms",
-    text: "High-stakes information, handled with discretion.",
+    text: "Where accuracy and confidentiality are the job.",
   },
   {
     title: "Growing companies",
-    text: "Processes that worked at twenty people, breaking at a hundred.",
+    text: "Processes built for a smaller version of the business.",
   },
   {
     title: "Owner-led businesses",
-    text: "Hours back for the person who’s been doing everything.",
+    text: "Operators who are the system today and want that to stop.",
   },
 ];
 
 export const principles = [
   {
-    title: "Diagnosis before code.",
-    text: "No AI for its own sake. We fix what’s measurably costing you, in order of impact.",
+    title: "Diagnosis before code",
+    text: "We do not build until we know which fix pays.",
   },
   {
-    title: "Built for the people who use it.",
-    text: "The best system is the one your team adopts. We design for the person at the desk, then train them on it.",
+    title: "Built for the people using it",
+    text: "Adoption is the measure, not the demo.",
   },
   {
-    title: "Yours, completely.",
-    text: "Documented, handed over, and owned by you. Leave anytime with everything we built.",
+    title: "Ownership, no lock-in",
+    text: "Code, accounts and documentation are yours.",
   },
   {
-    title: "Discretion by default.",
-    text: "NDA before discovery. Only the access we need. Your confidential data never goes into consumer AI tools.",
+    title: "Discretion by default",
+    text: "NDA before discovery. No confidential data in consumer AI tools.",
+  },
+];
+
+export const faq = [
+  {
+    q: "What does the Assay cost?",
+    a: "A fixed fee for a fixed scope, quoted after the first conversation once we know how many workflows are in play. The price does not move once agreed.",
+  },
+  {
+    q: "What if we do not hire you for the build?",
+    a: "You keep the blueprint. It is written so your own team or another firm can build from it.",
+  },
+  {
+    q: "Will our data end up in ChatGPT or similar tools?",
+    a: "No. We sign an NDA before discovery and never put confidential data into consumer AI tools. Where we use AI models, we use business accounts that do not train on your data, and we tell you which ones.",
+  },
+  {
+    q: "Do we have to replace our software?",
+    a: "Rarely. We build on the systems you already pay for first, and only recommend a new tool when the old one is the leak.",
+  },
+  {
+    q: "How long until something works?",
+    a: "Builds ship in stages, so the first piece is usable early rather than at the end. The Assay sets the order and timeline for your case.",
+  },
+  {
+    q: "Do you only work in Dallas–Fort Worth?",
+    a: "We are based in Dallas–Fort Worth and work with clients nationwide. Most work happens remotely, with on-site sessions when they help.",
   },
 ];

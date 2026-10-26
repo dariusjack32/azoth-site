@@ -4,20 +4,20 @@
   color-scheme: dark;
 
   /* Color */
-  --obsidian: #0b0b0c; /* page background */
-  --ink: #141416; /* raised surfaces */
+  --obsidian: #131209; /* page background */
+  --ink: #1a1910; /* raised surfaces */
   --bone: #ece8e0; /* primary text */
   --ash: #8c887f; /* secondary text */
-  --gold: #b8a06a; /* the only accent: hairlines, the mark, focus and hover */
+  --gold: #c8ae73; /* the only accent: hairlines, the mark, focus and hover */
   --rule: rgb(184 160 106 / 0.25); /* 1px hairlines */
   --rule-faint: rgb(184 160 106 / 0.13); /* hairlines inside a section */
 
   /* Type */
-  --font-display: "Cormorant Garamond", "Cormorant", "EB Garamond", Garamond, "Times New Roman", serif;
-  --font-body: "Instrument Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-display: "Newsreader Variable", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-body: "Newsreader Variable", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-mono: "Newsreader Variable", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
 
-  --step-0: clamp(1.0625rem, 1.03rem + 0.15vw, 1.125rem); /* 17 → 18 body */
+  --step-0: clamp(1.125rem, 1.08rem + 0.2vw, 1.1875rem); /* 18 → 19 body */
   --step-1: clamp(1.1875rem, 1.1rem + 0.35vw, 1.375rem); /* 19 → 22 lead */
   --step-2: clamp(1.625rem, 1.42rem + 0.85vw, 2.25rem); /* 26 → 36 item titles */
   --statement: clamp(1.5rem, 1.18rem + 1.3vw, 2.375rem); /* 24 → 38 statement paragraphs */

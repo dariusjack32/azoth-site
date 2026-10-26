@@ -1,14 +1,9 @@
 ---
-import "@fontsource/cormorant-garamond/latin-300.css";
-import "@fontsource/cormorant-garamond/latin-400.css";
-import "@fontsource/cormorant-garamond/latin-500.css";
-import "@fontsource/cormorant-garamond/latin-400-italic.css";
-import "@fontsource/instrument-sans/latin-400.css";
-import "@fontsource/instrument-sans/latin-500.css";
-import "@fontsource/ibm-plex-mono/latin-400.css";
+import "@fontsource-variable/newsreader/opsz.css";
+import "@fontsource-variable/newsreader/opsz-italic.css";
 import "../styles/tokens.css";
 import "../styles/global.css";
-import displayFont from "@fontsource/cormorant-garamond/files/cormorant-garamond-latin-300-normal.woff2?url";
+import displayFont from "@fontsource-variable/newsreader/files/newsreader-latin-opsz-normal.woff2?url";
 
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
@@ -60,7 +55,7 @@ const organizationJson = JSON.stringify(organization).replace(/</g, "\\u003c");
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex" />}
-    <meta name="theme-color" content="#0b0b0c" />
+    <meta name="theme-color" content="#131209" />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />

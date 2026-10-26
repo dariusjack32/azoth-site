@@ -1,5 +1,6 @@
 ---
 import Button from "./Button.astro";
+import { CAL_LINK } from "../config";
 
 const path = Astro.url.pathname;
 const links = [
@@ -30,7 +31,7 @@ const current = (href: string) => (path.startsWith(href) ? "page" : undefined);
       </ul>
       <span class="site-nav__divider" aria-hidden="true"></span>
       <a class="site-nav__login" href="/portal/" aria-current={current("/portal/")}>Client login</a>
-      <Button href="/contact/" size="sm" class="site-nav__cta">Book a call</Button>
+      <Button href={CAL_LINK} size="sm" class="site-nav__cta">Book a conversation</Button>
     </nav>
 
     <button
@@ -56,7 +57,7 @@ const current = (href: string) => (path.startsWith(href) ? "page" : undefined);
         }
       </ul>
       <a class="site-menu__login" href="/portal/" aria-current={current("/portal/")}>Client login</a>
-      <Button href="/contact/" class="site-menu__cta">Book a call</Button>
+      <Button href={CAL_LINK} class="site-menu__cta">Book a conversation</Button>
     </div>
   </div>
 </header>

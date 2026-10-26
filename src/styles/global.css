@@ -33,6 +33,7 @@ body {
   font-size: var(--step-0);
   line-height: 1.6;
   font-kerning: normal;
+  font-optical-sizing: auto;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -234,29 +235,36 @@ button {
   align-items: center;
   justify-content: center;
   min-height: 3.25rem;
-  padding: 0 1.75rem;
+  padding: 0 1.5rem;
   border: 1px solid var(--gold);
-  color: var(--bone);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 400;
+  border-radius: 4px;
+  background-color: var(--gold);
+  color: var(--obsidian);
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 500;
   line-height: 1;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   white-space: nowrap;
   transition:
     background-color 0.2s var(--ease),
-    color 0.2s var(--ease);
+    border-color 0.2s var(--ease),
+    transform 0.2s var(--ease);
 }
 
 .btn:hover {
-  background-color: var(--gold);
-  color: var(--obsidian);
+  background-color: #c9b17a;
+  border-color: #c9b17a;
+}
+
+.btn:active {
+  transform: scale(0.98);
 }
 
 .btn--sm {
   min-height: 2.75rem;
-  padding: 0 1.25rem;
+  padding: 0 1.1rem;
+  font-size: 1rem;
 }
 
 .link {
