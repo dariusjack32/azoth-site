@@ -56,6 +56,8 @@ export const sources: Source[] = [
   { id: "rome2", publisher: "Fierce Biotech", title: "Pretzel emerges as winner from rise and fall of Rome Therapeutics", date: "", url: "https://www.fiercebiotech.com/biotech/pretzel-winner-rise-and-fall-rome-therapeutics" },
   { id: "countable", publisher: "Business Wire", title: "Countable Labs (formerly Enumerix) launches Countable PCR", date: "2025-05-13", url: "https://www.businesswire.com/news/home/20250513717316/en" },
   { id: "scan", publisher: "Azoth & Co.", title: "Crawl of archventure.com/portfolio and its 115 outbound company links (November 2, 2026)", date: "2026-11-02", url: "https://www.archventure.com/portfolio/" },
+  { id: "city", publisher: "City Therapeutics (via Finviz)", title: "City Therapeutics announces closing of $230.0 million upsized initial public offering", date: "2026-10-19", url: "https://finviz.com/news/404164/city-therapeutics-announces-closing-of-2300-million-upsized-initial-public-offering-including-full-exercise-of-underwriters-option-to-purchase-additional-shares" },
+  { id: "sentivera", publisher: "RTTNews", title: "Haisco enters $1.5 billion exclusive license agreement with Sentivera", date: "2026-08-25", url: "https://www.rttnews.com/3684170/haisco-enters-1-5-billion-exclusive-license-agreement-with-sentivera.aspx" },
   { id: "orbital", publisher: "Endpoints News", title: "Bristol Myers joins in vivo CAR-T race with $1.5B Orbital acquisition", date: "2025-10-10", url: "https://endpoints.news/bristol-myers-joins-in-vivo-car-t-race-with-1-5b-orbital-acquisition/" },
   { id: "metsera", publisher: "Endpoints News", title: "Pfizer closes up to $10B deal for obesity biotech Metsera", date: "2025-11-13", url: "https://endpoints.news/pfizer-closes-up-to-10b-deal-with-obesity-biotech-metsera/" },
   { id: "qci", publisher: "D-Wave Quantum (SEC Form 8-K)", title: "D-Wave Announces Agreement to Acquire Quantum Circuits", date: "2026-01-07", url: "https://www.sec.gov/Archives/edgar/data/1907982/000190798226000010/d-waveannouncesagreementto.htm" },
@@ -312,6 +314,7 @@ const changes: Record<string, { status?: Status; detail?: string; was: string; n
   "Create Medicines": { was: "Listed as Myeloid Therapeutics", now: "Renamed Create Medicines", date: "2025-10-06", src: "create" },
   "Scale Biosciences": { status: "acquired", detail: "10x Genomics, 2025 (announced)", was: "Private", now: "10x Genomics agreed to acquire it", date: "2025-08-07", src: "scalebio" },
   "ROME Therapeutics": { status: "acquired", detail: "Pretzel Therapeutics, 2026", was: "Private", now: "Wound down, then acquired by Pretzel Therapeutics", date: "2026-01-12", src: "rome" },
+  "City Therapeutics": { status: "public", detail: "Nasdaq: CTY", was: "Private", now: "Public, Nasdaq: CTY", date: "2026-10-19", src: "city" },
   Enumerix: { was: "Listed as Enumerix", now: "Operating as Countable Labs", date: "2025-05-13", src: "countable" },
 };
 
@@ -346,6 +349,16 @@ export const added: Company[] = [
     listed: false,
     change: { was: "Not on the list", now: "Founded by ARCH in 2022; Lilly agreed to acquire it", date: "2026-05-26", src: "vaccineco" },
     src: ["vaccineco", "vaccineco2", "news"],
+  },
+  {
+    name: "Sentivera",
+    area: "other",
+    city: "",
+    what: "Inflammatory disease medicines, in-licensed from Haisco",
+    status: "private",
+    listed: false,
+    change: { was: "Not on the list", now: "Founded by ARCH and Population Health Partners; launched with a deal worth up to $1.5B", date: "2026-08-25", src: "sentivera" },
+    src: ["sentivera", "news"],
   },
   {
     name: "Soufflé Therapeutics",
@@ -403,7 +416,7 @@ export const changeLog = record
   .sort((a, b) => b.date.localeCompare(a.date));
 
 /** Changes that the firm's own news page already reports. */
-export const changesOnNewsPage = ["Generate Biomedicines", "Seaport Therapeutics", "Parabilis Medicines", "Kardigan", "Quantum Circuits", "Vaccine Company"];
+export const changesOnNewsPage = ["Generate Biomedicines", "Seaport Therapeutics", "Parabilis Medicines", "Kardigan", "Quantum Circuits", "Vaccine Company", "City Therapeutics", "Sentivera"];
 
 /* ---------------------------------------------------------------- Outcomes */
 
@@ -448,6 +461,7 @@ export const ipos2026: Ipo[] = [
   { company: "Seaport Therapeutics", ticker: "Nasdaq: SPTX", date: "2026-05-01", raisedM: 254.9, raised: "$254.9M", src: "seaport" },
   { company: "Parabilis Medicines", ticker: "Nasdaq: PBLS", date: "2026-06-10", raisedM: 670, raised: "$670M", note: "Plus a $75M private placement", src: "parabilis" },
   { company: "Kardigan", ticker: "Nasdaq: KARD", date: "2026-06-18", raisedM: 400, raised: "$400M", note: "$460M with the underwriters’ option", src: "kardigan" },
+  { company: "City Therapeutics", ticker: "Nasdaq: CTY", date: "2026-10-19", raisedM: 230, raised: "$230M", note: "Including the underwriters’ option", src: "city" },
 ];
 
 export const ipoTotalM = ipos2026.reduce((sum, i) => sum + i.raisedM, 0);
