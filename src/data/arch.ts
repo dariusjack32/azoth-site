@@ -8,6 +8,8 @@
 
 export const AS_OF = "2026-10-22";
 export const AS_OF_LABEL = "October 22, 2026";
+/** Last pass that added facts on top of the October 22 record (corrections, crawl). */
+export const UPDATED_LABEL = "November 2, 2026";
 
 /* ---------------------------------------------------------------- Sources */
 

@@ -20,6 +20,7 @@ import SiteScan from "../../components/arch/SiteScan.astro";
 import Pipeline from "../../components/arch/Pipeline.astro";
 import {
   AS_OF_LABEL,
+  UPDATED_LABEL,
   changeLog,
   exits,
   firm,
@@ -79,7 +80,7 @@ const toc = [
     sub={`ARCH Venture Partners’ published portfolio list is out of date in ${driftWord} places. We found them from public sources. The same drift inside a firm lands in LP reports, board materials and valuation marks.`}
   >
     <p class="study-note label">
-      Independent study by Azoth &amp; Co. · As of {AS_OF_LABEL} · Not affiliated with or endorsed by ARCH Venture
+      Independent study by Azoth &amp; Co. · As of {AS_OF_LABEL}, updated {UPDATED_LABEL} · Not affiliated with or endorsed by ARCH Venture
       Partners
     </p>
 
@@ -273,6 +274,7 @@ const toc = [
   .figure__value {
     font-family: var(--font-display);
     font-size: clamp(2.5rem, 1.9rem + 2.4vw, 4.25rem);
+    overflow-wrap: anywhere;
     font-weight: 300;
     line-height: 0.95;
     letter-spacing: -0.01em;
@@ -296,6 +298,11 @@ const toc = [
   @media (min-width: 64em) {
     .figures {
       grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    /* four across: keep "$12.3B+" inside its column */
+    .figure__value {
+      font-size: clamp(2.5rem, 1.2rem + 2.2vw, 3.75rem);
     }
   }
 
