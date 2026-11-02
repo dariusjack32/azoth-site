@@ -51,6 +51,11 @@ export const sources: Source[] = [
   { id: "verve", publisher: "Verve Therapeutics (SEC Form 8-K)", title: "Lilly to Acquire Verve Therapeutics", date: "2025-06-17", url: "https://www.sec.gov/Archives/edgar/data/1840574/000119312525141748/d30505dex991.htm" },
   { id: "unity", publisher: "Unity Biotechnology (SEC Form 8-K)", title: "Dissolution effective; Nasdaq delisting effective August 16, 2025", date: "2025-09-26", url: "https://www.sec.gov/Archives/edgar/data/1463361/000119312525220778/d190494d8k.htm" },
   { id: "create", publisher: "Fierce Pharma", title: "Myeloid Therapeutics creates new identity after pipeline outgrows its name", date: "2025-10-06", url: "https://www.fiercepharma.com/marketing/myeloid-therapeutics-creates-new-identity-after-pipeline-outgrows-its-name" },
+  { id: "scalebio", publisher: "10x Genomics", title: "10x Genomics to Acquire Scale Biosciences", date: "2025-08-07", url: "https://investors.10xgenomics.com/news/news-details/2025/10x-Genomics-to-Acquire-Scale-Biosciences/" },
+  { id: "rome", publisher: "Endpoints News (via Pulse)", title: "Pretzel buys Rome and its ‘dark genome’ work", date: "2026-01-12", url: "https://www.pulse.bot/biotech/news/pretzel-buys-rome-and-its-dark-genome-work-961974b5-ff01-4e90-b5a2-1a559a76634c/" },
+  { id: "rome2", publisher: "Fierce Biotech", title: "Pretzel emerges as winner from rise and fall of Rome Therapeutics", date: "", url: "https://www.fiercebiotech.com/biotech/pretzel-winner-rise-and-fall-rome-therapeutics" },
+  { id: "countable", publisher: "Business Wire", title: "Countable Labs (formerly Enumerix) launches Countable PCR", date: "2025-05-13", url: "https://www.businesswire.com/news/home/20250513717316/en" },
+  { id: "scan", publisher: "Azoth & Co.", title: "Crawl of archventure.com/portfolio and its 115 outbound company links (November 2, 2026)", date: "2026-11-02", url: "https://www.archventure.com/portfolio/" },
   { id: "orbital", publisher: "Endpoints News", title: "Bristol Myers joins in vivo CAR-T race with $1.5B Orbital acquisition", date: "2025-10-10", url: "https://endpoints.news/bristol-myers-joins-in-vivo-car-t-race-with-1-5b-orbital-acquisition/" },
   { id: "metsera", publisher: "Endpoints News", title: "Pfizer closes up to $10B deal for obesity biotech Metsera", date: "2025-11-13", url: "https://endpoints.news/pfizer-closes-up-to-10b-deal-with-obesity-biotech-metsera/" },
   { id: "qci", publisher: "D-Wave Quantum (SEC Form 8-K)", title: "D-Wave Announces Agreement to Acquire Quantum Circuits", date: "2026-01-07", url: "https://www.sec.gov/Archives/edgar/data/1907982/000190798226000010/d-waveannouncesagreementto.htm" },
@@ -305,6 +310,9 @@ const changes: Record<string, { status?: Status; detail?: string; was: string; n
   "Singular Genomics Systems": { status: "acquired", detail: "Deerfield Management, 2025", was: "Public, Nasdaq: OMIC", now: "Taken private by Deerfield Management", date: "2025-02-21", src: "singular" },
   "Unity Biotechnology": { status: "closed", detail: "Delisted and dissolved, 2025", was: "Public, Nasdaq: UBX", now: "Delisted August 2025, dissolved September 2025", date: "2025-09-26", src: "unity" },
   "Create Medicines": { was: "Listed as Myeloid Therapeutics", now: "Renamed Create Medicines", date: "2025-10-06", src: "create" },
+  "Scale Biosciences": { status: "acquired", detail: "10x Genomics, 2025 (announced)", was: "Private", now: "10x Genomics agreed to acquire it", date: "2025-08-07", src: "scalebio" },
+  "ROME Therapeutics": { status: "acquired", detail: "Pretzel Therapeutics, 2026", was: "Private", now: "Wound down, then acquired by Pretzel Therapeutics", date: "2026-01-12", src: "rome" },
+  Enumerix: { was: "Listed as Enumerix", now: "Operating as Countable Labs", date: "2025-05-13", src: "countable" },
 };
 
 export const companies: Company[] = rows.map(([name, area, city, what, status = "private", detail]) => {
@@ -425,8 +433,10 @@ export const exits: Exit[] = [
   { company: "Human Immunology Biosciences", buyer: "Biogen", date: "2024-05-22", valueB: 1.8, value: "Up to $1.8B", terms: "$1.15B upfront", src: "hibio" },
   { company: "Singular Genomics Systems", buyer: "Deerfield Management", date: "2025-02-21", valueB: null, value: "$20.00 a share", terms: "Taken private", src: "singular" },
   { company: "Verve Therapeutics", buyer: "Eli Lilly", date: "2025-06-17", valueB: 1.3, value: "Up to $1.3B", terms: "About $1.0B upfront", src: "verve" },
+  { company: "Scale Biosciences", buyer: "10x Genomics", date: "2025-08-07", valueB: null, value: "Not disclosed", terms: "Announced", src: "scalebio" },
   { company: "Orbital Therapeutics", buyer: "Bristol Myers Squibb", date: "2025-10-10", valueB: 1.5, value: "$1.5B", terms: "Cash", src: "orbital" },
   { company: "Metsera", buyer: "Pfizer", date: "2025-11-13", valueB: 10, value: "Up to $10B", terms: "Closed November 2025", src: "metsera" },
+  { company: "ROME Therapeutics", buyer: "Pretzel Therapeutics", date: "2026-01-12", valueB: null, value: "Not disclosed", terms: "After a wind-down", src: "rome" },
   { company: "Quantum Circuits", buyer: "D-Wave Quantum", date: "2026-01-07", valueB: 0.55, value: "$550M", terms: "$300M stock, $250M cash", src: "qci" },
   { company: "Vaccine Company", buyer: "Eli Lilly", date: "2026-05-26", valueB: 1.55, value: "Up to $1.55B", terms: "Announced", src: "vaccineco" },
 ];
@@ -495,4 +505,26 @@ export const statusLabel: Record<Status, string> = {
   private: "Private",
   acquired: "Acquired",
   closed: "Wound down",
+};
+
+/* ---------------------------------------------------------------- Site scan (November 2, 2026) */
+
+/** What a crawler sees on the portfolio page itself, separate from the facts above. Source: "scan". */
+export const SCAN_DATE_LABEL = "November 2, 2026";
+export const siteScan = {
+  linksChecked: 115,
+  dead: [
+    { name: "BE Biopharma", note: "be.bio no longer resolves" },
+    { name: "Slingshot Biosciences", note: "slingshot.bio no longer resolves" },
+    { name: "SunBird Bio", note: "sunbirdbio.com no longer resolves" },
+    { name: "ROME Therapeutics", note: "rometx.com no longer resolves" },
+    { name: "Homeward Health", note: "Link saved with a trailing space, so it fails" },
+    { name: "Lyell Immunopharma", note: "Points to an old domain; the company is at lyell.com" },
+  ],
+  noLink: 11,
+  noLinkPublic: "Prime Medicine (Nasdaq: PRME)",
+  placeholders: [
+    { text: "Date of Founding: Sample Date", count: 13 },
+    { text: "Arch Partners: (left blank)", count: 22 },
+  ],
 };

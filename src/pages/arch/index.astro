@@ -16,6 +16,7 @@ import CompanyExplorer from "../../components/arch/CompanyExplorer.astro";
 import ExitChart from "../../components/arch/ExitChart.astro";
 import SignalBrief from "../../components/arch/SignalBrief.astro";
 import Drift from "../../components/arch/Drift.astro";
+import SiteScan from "../../components/arch/SiteScan.astro";
 import Pipeline from "../../components/arch/Pipeline.astro";
 import {
   AS_OF_LABEL,
@@ -33,6 +34,7 @@ import {
 } from "../../data/arch";
 import { EMAIL } from "../../config";
 
+const driftWord = spell(changeLog.length);
 const raised = `$${Math.floor(raisedM / 100) / 10}B+`;
 const firstExitYear = exits[0].date.slice(0, 4);
 const bigDeals = exits.filter((e) => (e.valueB ?? 0) >= 7).length;
@@ -66,7 +68,7 @@ const toc = [
 
 <Base
   title="What a stale fact costs — Azoth & Co."
-  description="ARCH Venture Partners’ published portfolio list is out of date in ten places. We rebuilt the public record in a day, from cited sources, to show what the fix looks like."
+  description={`ARCH Venture Partners’ published portfolio list is out of date in ${driftWord} places. We rebuilt the public record in a day, from cited sources, to show what the fix looks like.`}
   noindex
   image="/og-arch.png"
   imageAlt="What a stale fact costs. An independent study of ARCH Venture Partners by Azoth & Co."
@@ -74,7 +76,7 @@ const toc = [
   <PageHeader
     label="Study · Public record"
     title="What a stale fact costs."
-    sub="ARCH Venture Partners’ published portfolio list is out of date in ten places. We found them in a day, from public sources. The same drift inside a firm lands in LP reports, board materials and valuation marks."
+    sub={`ARCH Venture Partners’ published portfolio list is out of date in ${driftWord} places. We found them from public sources. The same drift inside a firm lands in LP reports, board materials and valuation marks.`}
   >
     <p class="study-note label">
       Independent study by Azoth &amp; Co. · As of {AS_OF_LABEL} · Not affiliated with or endorsed by ARCH Venture
@@ -112,13 +114,14 @@ const toc = [
   </PageHeader>
 
   <Section id="stakes" label="01 · Stakes">
-    <h2 class="h-section" data-reveal>Ten facts on ARCH’s own list have moved.</h2>
+    <h2 class="h-section" data-reveal>{spell(changeLog.length, true)} facts on ARCH’s own list have moved.</h2>
     <p class="lede" data-reveal style="--i: 1">
       We checked all {firm.listCount} companies on ARCH’s portfolio page<Ref ids="portfolio" /> against filings and
-      announcements. Ten entries are behind: four companies that listed on Nasdaq this year, one acquired, one taken private,
-      one wound down, one renamed, and two ARCH-backed companies that don’t appear at all.
+      announcements. {spell(changeLog.length, true)} entries are behind: four companies that listed on Nasdaq this year, three acquired, one taken
+      private, one wound down, two renamed, and two ARCH-backed companies that don’t appear at all.
     </p>
     <Drift />
+    <SiteScan />
   </Section>
 
   <Section id="method" label="02 · Method">

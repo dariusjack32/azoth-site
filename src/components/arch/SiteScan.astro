@@ -1,0 +1,131 @@
+---
+/**
+ * What a crawler sees on the portfolio page itself: dead outbound links and template text left live.
+ * Separate from the fact-level drift above. Every number comes from siteScan in src/data/arch.ts (source "scan").
+ */
+import { siteScan, SCAN_DATE_LABEL } from "../../data/arch";
+import Ref from "./Ref.astro";
+
+const placeholderTotal = siteScan.placeholders.reduce((n, p) => n + p.count, 0);
+const figures = [
+  { value: String(siteScan.dead.length), label: "Company links that send a visitor nowhere" },
+  { value: String(siteScan.noLink), label: `Companies with no link at all, including ${siteScan.noLinkPublic}` },
+  { value: String(placeholderTotal), label: "Template fields left live as placeholder or blank" },
+];
+---
+
+<div class="scan">
+  <h3 class="h-item scan__title" data-reveal>The page itself, as a crawler sees it.</h3>
+  <p class="body-copy muted scan__lede" data-reveal style="--i: 1">
+    On {SCAN_DATE_LABEL} we crawled the portfolio page and checked all {siteScan.linksChecked} outbound company
+    links.<Ref ids="scan" /> Sites that block automated checks were left out, so these counts run low, not high.
+  </p>
+
+  <dl class="scan__figures">
+    {
+      figures.map((f, i) => (
+        <div class="scan__figure" data-reveal style={`--i: ${i}`}>
+          <dt class="scan__label">{f.label}</dt>
+          <dd class="scan__value">{f.value}</dd>
+        </div>
+      ))
+    }
+  </dl>
+
+  <ul class="scan__list" role="list" data-reveal>
+    {
+      siteScan.dead.map((d) => (
+        <li>
+          <span class="scan__name">{d.name}</span>
+          <span class="muted">{d.note}</span>
+        </li>
+      ))
+    }
+    {
+      siteScan.placeholders.map((p) => (
+        <li>
+          <span class="scan__name">“{p.text}”</span>
+          <span class="muted">Live {p.count} times</span>
+        </li>
+      ))
+    }
+  </ul>
+  <p class="body-copy muted scan__note" data-reveal>
+    None of this is hard to fix. All of it is what a page looks like when no system owns it.
+  </p>
+</div>
+
+<style>
+  .scan {
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+  }
+
+  .scan__lede,
+  .scan__note {
+    max-width: 60ch;
+  }
+
+  .scan__figures {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: var(--col-gap);
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .scan__figure {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 1.1rem 0 1.3rem;
+    border-bottom: 1px solid var(--rule-faint);
+  }
+
+  .scan__value {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 1.9rem + 1.4vw, 3.25rem);
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  .scan__label {
+    max-width: 28ch;
+    color: var(--ash);
+    font-size: 0.875rem;
+    line-height: 1.45;
+  }
+
+  .scan__list {
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .scan__list li {
+    display: grid;
+    gap: 0.2rem;
+    padding-block: 0.75rem;
+    border-bottom: 1px solid var(--rule-faint);
+    font-size: 0.9375rem;
+  }
+
+  .scan__name {
+    overflow-wrap: anywhere;
+  }
+
+  .scan__note {
+    margin-top: 1.5rem;
+  }
+
+  @media (min-width: 48em) {
+    .scan__figures {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .scan__list li {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.6fr);
+      column-gap: var(--col-gap);
+      align-items: baseline;
+    }
+  }
+</style>
