@@ -31,7 +31,7 @@ export const LOCATION = "Dallas–Fort Worth, Texas";
 /** Optional black-and-white portrait in /public, e.g. "/founder.jpg". Empty shows the mark instead. */
 export const FOUNDER_PHOTO = "";
 
-/** Days within which the Assay fee is credited toward an Opus build. Set to 0 to remove that line. */
+/** Days within which the Map fee is credited toward a Build. Set to 0 to remove that line. */
 export const ASSAY_CREDIT_DAYS = 60;
 
 /** Flip to true once you've read and edited /privacy. */

@@ -9,7 +9,7 @@ import { ASSAY_CREDIT_DAYS } from "../config";
 type Fact = { term: string; text?: string; list?: string[] };
 
 const facts: Record<string, Fact[]> = {
-  assay: [
+  map: [
     {
       term: "What happens",
       text: "Stakeholder interviews, process walk-throughs, and a systems and data inventory.",
@@ -17,7 +17,7 @@ const facts: Record<string, Fact[]> = {
     {
       term: "You receive",
       list: [
-        "A map of current workflows",
+        "The Blueprint: a map of current workflows",
         "A ranked list of opportunities, with estimated hours and cost recovered",
         "A 90-day roadmap",
         "Build-vs-buy guidance for each",
@@ -28,24 +28,24 @@ const facts: Record<string, Fact[]> = {
       term: "Fee",
       text:
         ASSAY_CREDIT_DAYS > 0
-          ? `Fixed, agreed upfront. Credited in full toward an Opus engagement started within ${ASSAY_CREDIT_DAYS} days.`
+          ? `Fixed, agreed upfront. Credited in full toward a Build started within ${ASSAY_CREDIT_DAYS} days.`
           : "Fixed, agreed upfront.",
     },
   ],
-  opus: [
-    { term: "Scope", text: "Set by the Assay." },
+  build: [
+    { term: "Scope", text: "Set by the Blueprint." },
     {
       term: "How it runs",
       text: "Smallest valuable piece first, then the next. Weekly check-ins. Documentation and team training included.",
     },
     { term: "Timeline", text: "Typically 4–12 weeks." },
   ],
-  stewardship: [
-    { term: "Format", text: "A monthly retainer." },
+  retainer: [
+    { term: "Format", text: "A monthly retainer for stewardship and monitoring." },
     {
       term: "Includes",
       list: [
-        "Monitoring and fixes",
+        "Monitoring, with fixes before you notice the break",
         "Ongoing improvements",
         "New automations as needs change",
         "A quarterly results review",
@@ -70,7 +70,7 @@ const faqs = [
   },
   {
     q: "What does it cost?",
-    a: "The Assay is a fixed fee agreed upfront. Builds are scoped and priced after the Assay, so you know the number before work begins.",
+    a: "The Map is a fixed fee agreed upfront. Builds are scoped and priced from the Blueprint, so you know the number before work begins.",
   },
   {
     q: "How fast will we see results?",
@@ -85,7 +85,7 @@ const faqs = [
 
 <Base
   title="Services — Azoth & Co."
-  description="Three stages: an Assay to diagnose, an Opus to build, and Stewardship to keep it running. Start with the first; continue only if it earns it."
+  description="Three stages: a Map to diagnose, a Build to rebuild what leaks, and a Retainer to steward and monitor it. Start with the first; continue only if it earns it."
 >
   <PageHeader label="Services" title="Three stages." sub="Start with the first. Continue only if it earns it." />
 

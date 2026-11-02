@@ -5,30 +5,30 @@
 
 export const stages = [
   {
-    id: "assay",
+    id: "map",
     numeral: "I",
-    name: "Assay",
+    name: "Map",
     descriptor: "Diagnose",
     summary:
       "We map how work actually moves through your firm and measure where time, money and accuracy leak out. Fixed scope, fixed fee.",
-    keep: "A prioritized blueprint, whether or not we build it.",
+    keep: "Your Blueprint: every fix ranked by return, yours whether or not we build it.",
   },
   {
-    id: "opus",
+    id: "build",
     numeral: "II",
-    name: "Opus",
-    descriptor: "Build",
+    name: "Build",
+    descriptor: "Rebuild",
     summary:
       "Automations, AI agents, integrations and internal tools, shipped in stages on the software you already pay for and designed around how your people already work.",
     keep: "Code, accounts and documentation. No lock-in.",
   },
   {
-    id: "stewardship",
+    id: "retainer",
     numeral: "III",
-    name: "Stewardship",
-    descriptor: "Run",
+    name: "Retainer",
+    descriptor: "Steward",
     summary:
-      "We operate, measure and improve the systems every month, so they keep up as the business changes.",
+      "Ongoing stewardship: we monitor, measure and improve the systems every month, so they keep up as the business changes.",
     keep: "The option to end it any time and run it yourself.",
   },
 ];
@@ -118,12 +118,12 @@ export const principles = [
 
 export const faq = [
   {
-    q: "What does the Assay cost?",
+    q: "What does the Map cost?",
     a: "A fixed fee for a fixed scope, quoted after the first conversation once we know how many workflows are in play. The price does not move once agreed.",
   },
   {
     q: "What if we do not hire you for the build?",
-    a: "You keep the blueprint. It is written so your own team or another firm can build from it.",
+    a: "You keep the Blueprint. It is written so your own team or another firm can build from it.",
   },
   {
     q: "Will our data end up in ChatGPT or similar tools?",
@@ -135,7 +135,7 @@ export const faq = [
   },
   {
     q: "How long until something works?",
-    a: "Builds ship in stages, so the first piece is usable early rather than at the end. The Assay sets the order and timeline for your case.",
+    a: "Builds ship in stages, so the first piece is usable early rather than at the end. The Map sets the order and timeline for your case.",
   },
   {
     q: "Do you only work in Dallas–Fort Worth?",
