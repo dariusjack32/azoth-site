@@ -1,0 +1,23 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import { EMAIL } from "../../config";
+---
+
+<Base title="Payment received — Azoth & Co." description="Your payment to Azoth & Co. went through." noindex>
+  <PageHeader label="Payments" title="Received. Thank you.">
+    <p class="lede thanks__text">
+      Stripe will email your receipt and invoice within a few minutes. We follow up within one business day to
+      confirm the kickoff.
+    </p>
+    <p class="muted">
+      Anything wrong with the charge: <a class="text-link" href={`mailto:${EMAIL}`}>{EMAIL}</a>.
+    </p>
+  </PageHeader>
+</Base>
+
+<style>
+  .thanks__text {
+    max-width: 40ch;
+  }
+</style>

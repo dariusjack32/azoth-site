@@ -36,3 +36,14 @@ export const ASSAY_CREDIT_DAYS = 60;
 
 /** Flip to true once you've read and edited /privacy. */
 export const PRIVACY_REVIEWED = true;
+
+/**
+ * Stripe Payment Links, shown on /pay. Live links only (https://buy.stripe.com/…, never "test_").
+ * Leave a link empty to hide that row; the page then points the client to the invoice we email.
+ * Builds and Map Extended are never linked here: they're invoiced from the Stripe dashboard.
+ */
+export const STRIPE_LINK_AUDIT = ""; // Visibility Audit, $2,500
+export const STRIPE_LINK_MAP_LIGHT = ""; // Map, Light, $6,500
+export const STRIPE_LINK_MAP_FULL = ""; // Map, Full, $18,000
+export const STRIPE_LINK_RETAINER_ESSENTIALS = ""; // Visibility Retainer, Essentials, $750/mo
+export const STRIPE_LINK_RETAINER_GROWTH = ""; // Visibility Retainer, Growth, $1,500/mo

@@ -1,13 +1,31 @@
 ---
 import Mark from "./Mark.astro";
-import { EMAIL, LEGAL_NAME, LOCATION } from "../config";
+import {
+  EMAIL,
+  LEGAL_NAME,
+  LOCATION,
+  STRIPE_LINK_AUDIT,
+  STRIPE_LINK_MAP_LIGHT,
+  STRIPE_LINK_MAP_FULL,
+  STRIPE_LINK_RETAINER_ESSENTIALS,
+  STRIPE_LINK_RETAINER_GROWTH,
+} from "../config";
 
 const year = new Date().getFullYear();
+// /pay appears in the footer only once at least one live Stripe link is set; until then it's reachable from /portal.
+const payLive = [
+  STRIPE_LINK_AUDIT,
+  STRIPE_LINK_MAP_LIGHT,
+  STRIPE_LINK_MAP_FULL,
+  STRIPE_LINK_RETAINER_ESSENTIALS,
+  STRIPE_LINK_RETAINER_GROWTH,
+].some(Boolean);
 const links = [
   { href: "/services/", label: "Services" },
   { href: "/about/", label: "About" },
   { href: "/contact/", label: "Contact" },
   { href: "/portal/", label: "Client login" },
+  ...(payLive ? [{ href: "/pay/", label: "Pay" }] : []),
   { href: "/privacy/", label: "Privacy" },
 ];
 ---

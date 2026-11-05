@@ -21,6 +21,17 @@ const checks = [
   ["CAL_LINK", (v) => v === "" || (filled(v) && /^https:\/\/(app\.)?cal\.com\/[^\s?#]+$/i.test(v)), 'empty, or a Cal.com link like "https://cal.com/your-handle/intro"'],
   ["CAL_LINK_DISCOVERY", (v) => v === undefined || v === "" || (filled(v) && /^https:\/\/(app\.)?cal\.com\/[^\s?#]+$/i.test(v)), "empty, or a Cal.com link"],
   ["PRIVACY_REVIEWED", (v) => v === true, "true, after you've read and edited /privacy"],
+  ...[
+    "STRIPE_LINK_AUDIT",
+    "STRIPE_LINK_MAP_LIGHT",
+    "STRIPE_LINK_MAP_FULL",
+    "STRIPE_LINK_RETAINER_ESSENTIALS",
+    "STRIPE_LINK_RETAINER_GROWTH",
+  ].map((name) => [
+    name,
+    (v) => v === undefined || v === "" || (filled(v) && /^https:\/\/buy\.stripe\.com\/(?!test_)[^\s?#]+$/.test(v)),
+    'empty, or a LIVE Stripe Payment Link like "https://buy.stripe.com/…" (test links are refused)',
+  ]),
 ];
 
 const failures = checks.filter(([name, ok]) => !ok(read(name)));
