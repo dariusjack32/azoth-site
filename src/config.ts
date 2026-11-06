@@ -42,8 +42,8 @@ export const PRIVACY_REVIEWED = true;
  * Leave a link empty to hide that row; the page then points the client to the invoice we email.
  * Builds and Map Extended are never linked here: they're invoiced from the Stripe dashboard.
  */
-export const STRIPE_LINK_AUDIT = ""; // Visibility Audit, $2,500
-export const STRIPE_LINK_MAP_LIGHT = ""; // Map, Light, $6,500
-export const STRIPE_LINK_MAP_FULL = ""; // Map, Full, $18,000
-export const STRIPE_LINK_RETAINER_ESSENTIALS = ""; // Visibility Retainer, Essentials, $750/mo
-export const STRIPE_LINK_RETAINER_GROWTH = ""; // Visibility Retainer, Growth, $1,500/mo
+export const STRIPE_LINK_AUDIT = "https://buy.stripe.com/cNi14p4yO4DXavkdIf0co05"; // Visibility Audit, $2,500
+export const STRIPE_LINK_MAP_LIGHT = "https://buy.stripe.com/28EfZjc1g7Q932S33B0co06"; // Map, Light, $6,500
+export const STRIPE_LINK_MAP_FULL = "https://buy.stripe.com/eVqaEZ7L03zT7j8fQn0co07"; // Map, Full, $18,000
+export const STRIPE_LINK_RETAINER_ESSENTIALS = "https://buy.stripe.com/aFa28t7L0fiBbzo5bJ0co08"; // Visibility Retainer, Essentials, $750/mo
+export const STRIPE_LINK_RETAINER_GROWTH = "https://buy.stripe.com/dRm14pc1gc6p5b09rZ0co09"; // Visibility Retainer, Growth, $1,500/mo
