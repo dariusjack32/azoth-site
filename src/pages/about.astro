@@ -4,13 +4,14 @@ import PageHeader from "../components/PageHeader.astro";
 import Section from "../components/Section.astro";
 import Mark from "../components/Mark.astro";
 import ClosingCTA from "../components/ClosingCTA.astro";
-import { BRAND, FOUNDER_NAME, FOUNDER_PHOTO, LOCATION, SITE_URL } from "../config";
+import { BRAND, FOUNDER_NAME, FOUNDER_PHOTO, LOCATION, SITE_URL, SOCIAL_LINKEDIN_FOUNDER, SOCIAL_X } from "../config";
 
 const personJson = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "Person",
   name: FOUNDER_NAME,
   jobTitle: "Founder",
+  sameAs: [SOCIAL_LINKEDIN_FOUNDER, SOCIAL_X],
   url: new URL("/about/", SITE_URL).href,
   worksFor: { "@type": "ProfessionalService", name: BRAND, url: SITE_URL },
   homeLocation: { "@type": "Place", name: LOCATION },

@@ -47,3 +47,7 @@ export const STRIPE_LINK_MAP_LIGHT = "https://buy.stripe.com/28EfZjc1g7Q932S33B0
 export const STRIPE_LINK_MAP_FULL = "https://buy.stripe.com/eVqaEZ7L03zT7j8fQn0co07"; // Map, Full, $18,000
 export const STRIPE_LINK_RETAINER_ESSENTIALS = "https://buy.stripe.com/aFa28t7L0fiBbzo5bJ0co08"; // Visibility Retainer, Essentials, $750/mo
 export const STRIPE_LINK_RETAINER_GROWTH = "https://buy.stripe.com/dRm14pc1gc6p5b09rZ0co09"; // Visibility Retainer, Growth, $1,500/mo
+
+/** Public profiles, used as sameAs in structured data so search engines connect them to the site. */
+export const SOCIAL_X = "https://x.com/DenzelDaricixm";
+export const SOCIAL_LINKEDIN_FOUNDER = "https://www.linkedin.com/in/denzel-yeboah-810ba1445/";
