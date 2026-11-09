@@ -51,3 +51,6 @@ export const STRIPE_LINK_RETAINER_GROWTH = "https://buy.stripe.com/dRm14pc1gc6p5
 /** Public profiles, used as sameAs in structured data so search engines connect them to the site. */
 export const SOCIAL_X = "https://x.com/DenzelDaricixm";
 export const SOCIAL_LINKEDIN_FOUNDER = "https://www.linkedin.com/in/denzel-yeboah-810ba1445/";
+
+/** Search engine site-verification tokens, rendered as <meta> tags on every page. Keep them: removing one un-verifies the site. */
+export const BING_SITE_VERIFICATION = "80CB41C6CD4B1ED0F912D11DE0996F96";

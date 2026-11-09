@@ -7,7 +7,7 @@ import displayFont from "@fontsource-variable/newsreader/files/newsreader-latin-
 
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
-import { BRAND, EMAIL, FOUNDER_NAME, LEGAL_NAME, SITE_URL, SOCIAL_LINKEDIN_FOUNDER, SOCIAL_X } from "../config";
+import { BING_SITE_VERIFICATION, BRAND, EMAIL, FOUNDER_NAME, LEGAL_NAME, SITE_URL, SOCIAL_LINKEDIN_FOUNDER, SOCIAL_X } from "../config";
 
 interface Props {
   title: string;
@@ -77,6 +77,7 @@ const organizationJson = JSON.stringify(organization).replace(/</g, "\\u003c");
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex" />}
     <meta name="theme-color" content="#000000" />
+    {BING_SITE_VERIFICATION && <meta name="msvalidate.01" content={BING_SITE_VERIFICATION} />}
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
