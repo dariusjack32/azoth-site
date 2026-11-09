@@ -7,7 +7,7 @@ import displayFont from "@fontsource-variable/newsreader/files/newsreader-latin-
 
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
-import { BRAND, EMAIL, FOUNDER_NAME, SITE_URL } from "../config";
+import { BRAND, EMAIL, FOUNDER_NAME, LEGAL_NAME, SITE_URL } from "../config";
 
 interface Props {
   title: string;
@@ -35,10 +35,30 @@ const organization = {
   name: BRAND,
   url: SITE_URL,
   email: EMAIL,
+  legalName: LEGAL_NAME,
+  alternateName: ["Azoth and Co", "Azoth & Co Consulting", "Azoth and Company"],
   description:
-    "AI and operations consulting. We turn manual processes into systems your people actually use — diagnosed, built, and kept running, end to end.",
-  areaServed: "US",
-  address: { "@type": "PostalAddress", addressRegion: "TX", addressCountry: "US" },
+    "AI and operations consulting in Dallas–Fort Worth. We turn manual processes into systems your people actually use — diagnosed, built, and kept running, end to end.",
+  slogan: "Operations, rebuilt.",
+  knowsAbout: [
+    "AI consulting",
+    "Operations consulting",
+    "Workflow automation",
+    "AI agents for business",
+    "Business process mapping",
+    "Reporting automation",
+    "Document processing",
+    "Local search visibility",
+  ],
+  areaServed: [
+    { "@type": "AdministrativeArea", name: "Dallas–Fort Worth metroplex" },
+    ...["Dallas", "Fort Worth", "Plano", "Frisco", "McKinney", "Denton", "Prosper", "Arlington"].map((name) => ({
+      "@type": "City",
+      name: `${name}, TX`,
+    })),
+    { "@type": "Country", name: "United States" },
+  ],
+  address: { "@type": "PostalAddress", addressLocality: "Dallas", addressRegion: "TX", addressCountry: "US" },
   founder: { "@type": "Person", name: FOUNDER_NAME },
   image: ogImage,
   logo: new URL("/apple-touch-icon.png", SITE_URL).href,
@@ -80,6 +100,7 @@ const organizationJson = JSON.stringify(organization).replace(/</g, "\\u003c");
       document.documentElement.classList.add("js");
     </script>
     {isHome && <script is:inline type="application/ld+json" set:html={organizationJson} />}
+    <slot name="head" />
 
     {/* Analytics: none in v1. Add one privacy-friendly script here later (e.g. Plausible or Cloudflare Web Analytics). */}
   </head>

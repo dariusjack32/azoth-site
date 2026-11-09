@@ -1,0 +1,24 @@
+# Azoth & Co.
+
+> Azoth & Co. is an AI and operations consulting firm based in Dallas–Fort Worth, Texas, working with clients nationwide. Tagline: "Operations, rebuilt." It turns manual work (retyping, chasing, rebuilding reports) into systems staff actually use. Founder: Denzel Yeboah. Legal name: Azoth & Co. Consulting LLC.
+
+Every engagement starts with a diagnosis, not a proposal:
+
+- **Map**: fixed-fee process mapping that ends in a written Blueprint the client keeps.
+- **Build**: workflow automation and AI agents, reporting and a single source of truth, document intelligence, internal tools and portals, and AI enablement.
+- **Retainer**: ongoing monitoring and improvement of what was built.
+- **Visibility Audit**: for owner-led local businesses, a review of how the business shows up in Google, maps and AI answers.
+
+Clients: investment and professional firms, growing companies, and owner-led businesses. NDA before discovery; confidential data is never put into consumer AI tools.
+
+## Pages
+
+- [Home](https://azothandco.com/): positioning, process, FAQ
+- [Services](https://azothandco.com/services/): Map, Build, Retainer in detail
+- [About](https://azothandco.com/about/): who we are and how we work
+- [Contact](https://azothandco.com/contact/): book a 15- or 30-minute call
+
+## Contact
+
+- Email: denzel@azothandco.com
+- Booking: https://cal.com/azothandco/intro
