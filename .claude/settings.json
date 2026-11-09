@@ -1,0 +1,28 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Edit|Write|MultiEdit|NotebookEdit|Read|Grep|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.claude-harness/harness.py\" guard",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "deny": [
+      "Read(~/.claude-harness/secret/**)",
+      "Edit(~/.claude-harness/**)",
+      "Edit(.claude/harness/**)",
+      "Edit(.claude/settings.json)"
+    ],
+    "ask": [
+      "Bash(harness new:*)",
+      "Bash(python3 ~/.claude-harness/harness.py new:*)"
+    ]
+  }
+}

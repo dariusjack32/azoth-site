@@ -5,3 +5,12 @@ dist/
 *.log
 .env
 .env.*
+# claude-harness
+.claude/harness/
+.claude/progress.md
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+.mypy_cache/
+.ruff_cache/

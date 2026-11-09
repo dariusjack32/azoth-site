@@ -24,3 +24,19 @@ Static Astro 7 site, deployed to GitHub Pages at azothandco.com. Design and copy
 - Hand-written CSS with tokens. No Tailwind, UI kits or component libraries.
 - JS: under 10 KB per page except /contact (Cal.com). Keep scripts `is:inline` and tiny.
 - Accessibility: WCAG AA, axe-clean, visible gold focus rings, `prefers-reduced-motion` respected.
+
+<!-- harness:begin -->
+## Harness rules (enforced by hooks, not by this text)
+
+When `.claude/harness/contract.json` exists you are in a task worktree:
+- Read the contract first. Only edit files in `allowed_write`. If the goal needs more, stop and say so; never work around a block.
+- "Done" means the contract's `checks` pass when `harness verify` runs them. Your own claim that tests pass is not evidence.
+- Before verifying, run the `skeptic` subagent. If it rejects, fix and repeat.
+- Then run `harness verify`. Commit only after it prints `status=PASS`, and commit exactly what was verified (`git add -A && git commit`).
+- Keep a short progress log in `.claude/progress.md` (done / next / blockers) so a fresh session can resume.
+- If the harness blocks you, read the message and adjust. Do not retry the same call.
+
+When a mistake gets corrected, add the lesson as a one-line rule in this file (outside the harness block) so it never repeats.
+
+Planning a new task from the main checkout: draft the contract JSON (goal, allowed_write, checks) to /tmp, then run `harness new <task-id> --contract /tmp/<file>.json`. The human approves that command.
+<!-- harness:end -->
