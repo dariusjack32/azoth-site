@@ -4,13 +4,25 @@ import PageHeader from "../components/PageHeader.astro";
 import Section from "../components/Section.astro";
 import Mark from "../components/Mark.astro";
 import ClosingCTA from "../components/ClosingCTA.astro";
-import { FOUNDER_NAME, FOUNDER_PHOTO } from "../config";
+import { BRAND, FOUNDER_NAME, FOUNDER_PHOTO, LOCATION, SITE_URL } from "../config";
+
+const personJson = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: FOUNDER_NAME,
+  jobTitle: "Founder",
+  url: new URL("/about/", SITE_URL).href,
+  worksFor: { "@type": "ProfessionalService", name: BRAND, url: SITE_URL },
+  homeLocation: { "@type": "Place", name: LOCATION },
+  knowsAbout: ["AI consulting", "Operations consulting", "Workflow automation", "Local search visibility"],
+}).replace(/</g, "\\u003c");
 ---
 
 <Base
   title="About — Azoth & Co."
-  description="Azoth & Co. is an AI and operations consultancy in Dallas–Fort Worth. We start with the work, not the technology."
+  description={`Azoth & Co. is an AI and operations consultancy in Dallas–Fort Worth, founded by ${FOUNDER_NAME}. We start with the work, not the technology.`}
 >
+  <script is:inline type="application/ld+json" set:html={personJson} slot="head" />
   <PageHeader label="About" title="An old idea, applied to modern work." />
 
   <Section id="name" label="The name">

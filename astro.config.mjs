@@ -12,7 +12,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       // /arch/ is an unlisted study (noindex): shared by link, kept out of search.
-      filter: (page) => !page.includes("/portal/") && !page.includes("/pay/") && !page.includes("/404") && !page.includes("/arch/"),
+      filter: (page) => !page.includes("/portal/") && !page.includes("/pay/") && !page.includes("/404") && !page.includes("/arch/") && !page.includes("/audit/"),
     }),
   ],
 });

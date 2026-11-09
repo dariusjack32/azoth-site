@@ -1,0 +1,279 @@
+---
+/**
+ * /audit/skin-gift/ — a first-look visibility study of one McKinney med spa, built only from public search results.
+ *
+ * Unlisted on purpose, like /arch/: noindex, out of the sitemap, not in the nav. It exists to be sent.
+ * Denzel asked for it by name (Nov 8, 2026). Every claim cites an entry in src/data/skin-gift.ts.
+ */
+import Base from "../../layouts/Base.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import Section from "../../components/Section.astro";
+import Button from "../../components/Button.astro";
+import { CAL_LINK, EMAIL, STRIPE_LINK_AUDIT } from "../../config";
+import { CHECKED_LABEL, findings, first30, pagesChecked, sources } from "../../data/skin-gift";
+
+const refNo = (id: string) => sources.findIndex((s) => s.id === id) + 1;
+const publisher = (id: string) => sources.find((s) => s.id === id)?.publisher ?? id;
+const refs = (ids: string[]) => [...new Set(ids.map(refNo))].sort((a, b) => a - b);
+const missing = pagesChecked.filter((p) => !p.skinGift).length;
+---
+
+<Base
+  title="Skin Gift Medical Aesthetics — a first look at search visibility · Azoth & Co."
+  description="How Skin Gift Medical Aesthetics in McKinney shows up when patients search for a med spa, from public search results."
+  noindex
+>
+  <PageHeader label={`Prepared ${CHECKED_LABEL}`} title="Where patients look, and where Skin Gift is." compact>
+    <p class="lede sg__lede">
+      A first look at how Skin Gift Medical Aesthetics shows up when someone in McKinney searches for a med spa. Built
+      only from public search results. No access to your accounts was used.
+    </p>
+  </PageHeader>
+
+  <Section id="summary" label="In one line">
+    <p class="statement" data-reveal>
+      Of the {pagesChecked.length} pages patients reach for a McKinney med spa, Skin Gift appears on {
+        pagesChecked.length - missing
+      }.
+    </p>
+  </Section>
+
+  <Section id="findings" label="What we found" labelAs="h2">
+    <ol class="sg-findings" role="list">
+      {
+        findings.map((f) => (
+          <li class="sg-findings__row" data-reveal>
+            <span class="label sg-findings__n" aria-hidden="true">
+              {f.n}
+            </span>
+            <div>
+              <h3 class="h-item">
+                {f.title}
+                <sup class="sg-ref">
+                  {refs(f.refs).map((n, i) => (
+                    <>
+                      {i > 0 && <span aria-hidden="true">,</span>}
+                      <a href={`#src-${n}`} aria-label={`Source ${n}`}>
+                        {n}
+                      </a>
+                    </>
+                  ))}
+                </sup>
+              </h3>
+              <p class="muted sg-findings__text">{f.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
+  <Section id="pages" label="The pages we checked" labelAs="h2">
+    <div class="sg-table-wrap">
+      <table class="sg-table">
+        <caption class="label">Searches: “best med spa McKinney”, “Botox McKinney”</caption>
+        <thead>
+          <tr>
+            <th scope="col">Page</th>
+            <th scope="col">Who patients see there</th>
+            <th scope="col">Skin Gift</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            pagesChecked.map((p) => (
+              <tr>
+                <th scope="row">
+                  <a class="text-link" href={`#src-${refNo(p.source)}`}>
+                    {publisher(p.source)}
+                  </a>
+                </th>
+                <td class="muted">{p.shows}</td>
+                <td class={p.skinGift ? "sg-yes" : "sg-no"}>{p.skinGift ? "Listed" : "Not listed"}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </Section>
+
+  <Section id="first-30" label="The first 30 days" labelAs="h2">
+    <p class="lede sg__copy" data-reveal>None of this needs new software. Most of it costs nothing but attention.</p>
+    <ol class="facts__list sg-steps" role="list">
+      {first30.map((step) => <li>{step}</li>)}
+    </ol>
+  </Section>
+
+  <Section id="limits" label="What this is not">
+    <p class="muted sg__copy">
+      A first look, not the Audit. It does not include your Google Business Profile data, where you place on the map
+      street by street, your website’s technical health, or what each AI tool says by name. Those are in the Visibility
+      Audit, which ends in a ranked fix list and 90-day targets.
+    </p>
+  </Section>
+
+  <Section id="next" label="Next">
+    <h2 class="h-section" data-reveal>Fifteen minutes to walk through it.</h2>
+    <p class="lede muted sg__copy" data-reveal>
+      Or start the full Visibility Audit now. $2,500, credited in full toward the fixes if you go ahead within 30 days.
+    </p>
+    <div class="sg__actions" data-reveal>
+      <Button href={CAL_LINK}>Book 15 minutes</Button>
+      {
+        STRIPE_LINK_AUDIT && (
+          <a class="link" href={STRIPE_LINK_AUDIT} rel="noopener">
+            Start the Visibility Audit
+          </a>
+        )
+      }
+    </div>
+    <p class="muted sg__email">
+      Questions: <a class="text-link" href={`mailto:${EMAIL}`}>{EMAIL}</a>
+    </p>
+  </Section>
+
+  <Section id="sources" label="Sources" labelAs="h2">
+    <ol class="sg-sources" role="list">
+      {
+        sources.map((s, i) => (
+          <li id={`src-${i + 1}`}>
+            <span class="label sg-sources__n">{i + 1}</span>
+            <span>
+              {s.publisher}, <a class="text-link" href={s.url} rel="noopener">{s.title}</a>
+            </span>
+          </li>
+        ))
+      }
+    </ol>
+    <p class="muted sg-sources__note">
+      Checked {CHECKED_LABEL}. Search results and directories change; we will recheck before any engagement.
+    </p>
+  </Section>
+</Base>
+
+<style>
+  .sg__lede {
+    max-width: 52ch;
+  }
+
+  .sg__copy {
+    max-width: 56ch;
+  }
+
+  .sg__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 2rem;
+    margin-top: 2rem;
+  }
+
+  .sg__email {
+    margin-top: 1.5rem;
+    font-size: 0.9375rem;
+  }
+
+  .sg-findings {
+    border-top: 1px solid var(--rule);
+  }
+
+  .sg-findings__row {
+    display: grid;
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+    column-gap: 1rem;
+    padding-block: 1.9rem;
+    border-bottom: 1px solid var(--rule-faint);
+  }
+
+  .sg-findings__n {
+    padding-top: 0.6em;
+    color: var(--gold);
+  }
+
+  .sg-findings__text {
+    max-width: 58ch;
+    margin-top: 0.75rem;
+  }
+
+  .sg-ref {
+    margin-left: 0.15em;
+    color: var(--ash);
+    font-family: var(--font-mono);
+    font-size: 0.55em;
+    line-height: 0;
+    vertical-align: super;
+    white-space: nowrap;
+  }
+
+  .sg-ref a:hover {
+    color: var(--gold);
+  }
+
+  .sg-table-wrap {
+    overflow-x: auto;
+  }
+
+  .sg-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+  }
+
+  .sg-table caption {
+    padding-bottom: 1rem;
+    text-align: left;
+  }
+
+  .sg-table th,
+  .sg-table td {
+    padding: 1rem 1.25rem 1rem 0;
+    border-bottom: 1px solid var(--rule-faint);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .sg-table thead th {
+    border-bottom-color: var(--rule);
+    color: var(--ash);
+    font-family: var(--font-mono);
+    font-size: var(--label-size);
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .sg-table tbody th {
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  .sg-no {
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  .sg-steps {
+    margin-top: 2rem;
+    max-width: 58ch;
+  }
+
+  .sg-sources li {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: 0.75rem;
+    padding-block: 0.6rem;
+    border-bottom: 1px solid var(--rule-faint);
+    font-size: 0.875rem;
+    scroll-margin-top: 2rem;
+  }
+
+  .sg-sources__n {
+    color: var(--gold);
+  }
+
+  .sg-sources__note {
+    margin-top: 1.25rem;
+    font-size: 0.875rem;
+  }
+</style>

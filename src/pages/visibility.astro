@@ -1,0 +1,313 @@
+---
+/**
+ * /visibility/ — the small-business track: Visibility Audit, fixes, and the Visibility Retainer.
+ * Prices mirror /pay/; payment links come from src/config.ts.
+ */
+import Base from "../layouts/Base.astro";
+import PageHeader from "../components/PageHeader.astro";
+import Section from "../components/Section.astro";
+import Button from "../components/Button.astro";
+import ClosingCTA from "../components/ClosingCTA.astro";
+import {
+  BRAND,
+  CAL_LINK,
+  SITE_URL,
+  STRIPE_LINK_AUDIT,
+  STRIPE_LINK_RETAINER_ESSENTIALS,
+  STRIPE_LINK_RETAINER_GROWTH,
+} from "../config";
+
+type Fact = { term: string; text?: string; list?: string[] };
+
+const audit: Fact[] = [
+  {
+    term: "What we check",
+    list: [
+      "Your Google Business Profile: categories, services, photos, posts, reviews and replies",
+      "Where you place on the map for your top services, across your service area",
+      "Your website: titles, speed, mobile, service pages and structured data",
+      "Your name, address and phone across the directories customers and AI tools read",
+      "What ChatGPT, Google’s AI answers and Perplexity say when asked for what you do, where you do it",
+      "The three competitors who show up instead of you, and why",
+    ],
+  },
+  {
+    term: "You receive",
+    list: [
+      "A written audit in plain language",
+      "A ranked fix list: what to do first, and what each fix is worth",
+      "90-day targets you can hold us, or anyone, to",
+    ],
+  },
+  { term: "Fee", text: "$2,500, fixed. Credited in full toward fixes started within 30 days." },
+];
+
+const retainers = [
+  {
+    name: "Essentials",
+    price: "$750 / month",
+    text: "Profile and listing upkeep, review requests and replies, rank tracking, and a monthly report you can read in five minutes.",
+    href: STRIPE_LINK_RETAINER_ESSENTIALS,
+  },
+  {
+    name: "Growth",
+    price: "$1,500 / month",
+    text: "Everything in Essentials, plus a new service or location page each month, content repurposed across your profiles, and seasonal offers.",
+    href: STRIPE_LINK_RETAINER_GROWTH,
+  },
+];
+
+const faqs = [
+  {
+    q: "How is this different from an SEO agency?",
+    a: "Most agencies start with a monthly contract. We start with the Audit: what is broken, what fixing it is worth, and in what order. You decide what happens next, and you keep the audit either way.",
+  },
+  {
+    q: "Do you guarantee rankings?",
+    a: "No. No one honest can. We commit to the work, set targets in the Audit, and report against them every month.",
+  },
+  {
+    q: "Does this cover AI search?",
+    a: "Yes. ChatGPT, Google’s AI answers and Perplexity recommend businesses they can confirm across many sources. The Audit shows where they look and whether you are there.",
+  },
+  {
+    q: "How long until we see results?",
+    a: "Profile and listing fixes often show within weeks. Ranking for competitive services takes months. The Audit sets the order so the quick wins come first.",
+  },
+  {
+    q: "Is there a long contract?",
+    a: "The Retainer is three months, then month to month. Fixes are a fixed price, agreed before work begins.",
+  },
+  {
+    q: "Which areas do you serve?",
+    a: "Owner-led businesses across Dallas–Fort Worth: McKinney, Frisco, Plano, Prosper, Denton, Allen and the rest of the metroplex. We work remotely, with on-site visits when they help.",
+  },
+];
+
+const pageUrl = new URL("/visibility/", SITE_URL).href;
+const schema = JSON.stringify([
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Local search and AI visibility",
+    serviceType: "Local SEO and AI search visibility",
+    url: pageUrl,
+    provider: { "@type": "ProfessionalService", name: BRAND, url: SITE_URL },
+    areaServed: { "@type": "AdministrativeArea", name: "Dallas–Fort Worth metroplex" },
+    offers: [
+      { "@type": "Offer", name: "Visibility Audit", price: "2500", priceCurrency: "USD" },
+      {
+        "@type": "Offer",
+        name: "Visibility Retainer, Essentials",
+        priceSpecification: { "@type": "UnitPriceSpecification", price: "750", priceCurrency: "USD", unitCode: "MON" },
+      },
+      {
+        "@type": "Offer",
+        name: "Visibility Retainer, Growth",
+        priceSpecification: { "@type": "UnitPriceSpecification", price: "1500", priceCurrency: "USD", unitCode: "MON" },
+      },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  },
+]).replace(/</g, "\\u003c");
+---
+
+<Base
+  title="Local SEO & AI Search Visibility, Dallas–Fort Worth — Azoth & Co."
+  description="For owner-led businesses in DFW: show up on Google, on the map and in AI answers. Start with a $2,500 Visibility Audit, then fix and keep it."
+>
+  <script is:inline type="application/ld+json" set:html={schema} slot="head" />
+
+  <PageHeader
+    label="Visibility · Dallas–Fort Worth"
+    title="Found first."
+    sub="For owner-led businesses: show up on Google, on the map and in AI answers when customers search for what you do."
+  >
+    <div class="vis__actions">
+      {STRIPE_LINK_AUDIT ? <Button href={STRIPE_LINK_AUDIT} rel="noopener">Start with the Audit</Button> : null}
+      <a class="link" href={CAL_LINK}>Or book a 15-minute conversation</a>
+    </div>
+  </PageHeader>
+
+  <Section id="why" label="The problem">
+    <p class="statement" data-reveal>Customers choose from the first screen.</p>
+    <p class="lede muted vis__copy" data-reveal>
+      The map, the top three results, and now the AI answer. A business that is not there is not considered, however
+      good the work is. Most owners never see it happen, because the customer who chose someone else never calls.
+    </p>
+  </Section>
+
+  <Section id="audit" class="stage-detail">
+    <p slot="margin" class="vis__numeral" aria-hidden="true">I</p>
+    <header class="vis__head" data-reveal>
+      <h2 class="h-section">Visibility Audit</h2>
+      <p class="label vis__descriptor">Diagnose</p>
+    </header>
+    <p class="lede vis__summary" data-reveal>
+      A fixed-fee look at every place a customer, or an AI, decides whether to find you. It ends in a fix list, not a
+      sales deck.
+    </p>
+    <dl class="facts">
+      {
+        audit.map((fact) => (
+          <div class="facts__row">
+            <dt class="label">{fact.term}</dt>
+            <dd>
+              {fact.text && <p>{fact.text}</p>}
+              {fact.list && (
+                <ul class="facts__list" role="list">
+                  {fact.list.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              )}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Section>
+
+  <Section id="fix" class="stage-detail">
+    <p slot="margin" class="vis__numeral" aria-hidden="true">II</p>
+    <header class="vis__head" data-reveal>
+      <h2 class="h-section">Fix</h2>
+      <p class="label vis__descriptor">Build</p>
+    </header>
+    <p class="lede vis__summary" data-reveal>
+      We make the fixes on the list: profiles, listings, service pages, reviews, site repairs. Priced from the Audit
+      before work begins, and capped at $10,000 for owner-led businesses.
+    </p>
+  </Section>
+
+  <Section id="retainer" class="stage-detail">
+    <p slot="margin" class="vis__numeral" aria-hidden="true">III</p>
+    <header class="vis__head" data-reveal>
+      <h2 class="h-section">Visibility Retainer</h2>
+      <p class="label vis__descriptor">Keep it</p>
+    </header>
+    <p class="lede vis__summary" data-reveal>
+      Rankings decay when nobody tends them. The Retainer keeps you where the Audit put you, and moves you up.
+    </p>
+    <ul class="tiers" role="list">
+      {
+        retainers.map((tier) => (
+          <li class="tiers__row">
+            <div class="tiers__main">
+              <h3 class="h-item">{tier.name}</h3>
+              <p class="muted tiers__text">{tier.text}</p>
+            </div>
+            <p class="tiers__price">{tier.price}</p>
+            {tier.href && (
+              <div class="tiers__action">
+                <Button href={tier.href} size="sm" rel="noopener">
+                  Start
+                </Button>
+              </div>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+    <p class="muted tiers__terms">Three months, then month to month.</p>
+  </Section>
+
+  <Section id="questions" label="Questions" labelAs="h2">
+    <div class="faq">
+      {
+        faqs.map((item) => (
+          <details class="faq__item">
+            <summary class="faq__q">
+              <span class="faq__question">{item.q}</span>
+              <span class="faq__icon" aria-hidden="true" />
+            </summary>
+            <div class="faq__a">
+              <p class="muted">{item.a}</p>
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </Section>
+
+  <ClosingCTA />
+</Base>
+
+<style>
+  .vis__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 2rem;
+  }
+
+  .vis__copy {
+    max-width: 52ch;
+    margin-top: 1.75rem;
+  }
+
+  :global(.stage-detail .section__inner) {
+    padding-block: clamp(4.5rem, 9vw, 8rem);
+  }
+
+  .vis__numeral {
+    color: var(--gold);
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 3rem + 4vw, 7.5rem);
+    font-weight: 300;
+    line-height: 0.9;
+  }
+
+  .vis__descriptor {
+    margin-top: 0.9rem;
+  }
+
+  .vis__summary {
+    max-width: 48ch;
+    margin-block: 1.75rem 2.5rem;
+  }
+
+  .tiers {
+    border-top: 1px solid var(--rule);
+  }
+
+  .tiers__row {
+    display: grid;
+    gap: 0.75rem 2rem;
+    align-items: start;
+    padding-block: 1.5rem;
+    border-bottom: 1px solid var(--rule-faint);
+  }
+
+  .tiers__text {
+    max-width: 46ch;
+    margin-top: 0.5rem;
+    font-size: 0.9375rem;
+  }
+
+  .tiers__price {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    white-space: nowrap;
+  }
+
+  .tiers__terms {
+    margin-top: 1.25rem;
+    font-size: 0.9375rem;
+  }
+
+  @media (min-width: 48em) {
+    .tiers__row {
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+    }
+  }
+</style>
