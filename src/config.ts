@@ -34,12 +34,17 @@ export const FOUNDER_PHOTO = "";
 /** Days within which the Map fee is credited toward a Build. Set to 0 to remove that line. */
 export const ASSAY_CREDIT_DAYS = 60;
 
-/** Build fee caps by firm size, shown on /services. The Build is priced from the Blueprint, never above the cap. */
+/**
+ * Build fee caps by firm size, shown on /services. The Build is priced from the Blueprint, never above the cap.
+ * Owner-led: the cap is the total across Audit, Map and Build. Other tiers: the cap applies after the Map credit.
+ * The Retainer is always separate.
+ */
+export const OWNER_LED_TOTAL_CAP = "$10,000";
 export const BUILD_CAPS = [
-  { size: "Owner-led business", cap: "$10,000" },
-  { size: "Small business", cap: "$20,000" },
-  { size: "Mid-size firm", cap: "$35,000" },
-  { size: "Large firm", cap: "$50,000" },
+  { size: "Owner-led business", terms: `${OWNER_LED_TOTAL_CAP} total across Audit, Map and Build` },
+  { size: "Small business", terms: "up to $20,000 after the Map credit" },
+  { size: "Mid-size firm", terms: "up to $35,000 after the Map credit" },
+  { size: "Large firm", terms: "up to $50,000 after the Map credit" },
 ];
 
 /** Flip to true once you've read and edited /privacy. */

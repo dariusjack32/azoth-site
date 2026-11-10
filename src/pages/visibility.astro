@@ -15,6 +15,7 @@ import {
   STRIPE_LINK_AUDIT,
   STRIPE_LINK_RETAINER_ESSENTIALS,
   STRIPE_LINK_RETAINER_GROWTH,
+  OWNER_LED_TOTAL_CAP,
 } from "../config";
 
 type Fact = { term: string; text?: string; list?: string[] };
@@ -184,7 +185,8 @@ const schema = JSON.stringify([
     </header>
     <p class="lede vis__summary" data-reveal>
       We make the fixes on the list: profiles, listings, service pages, reviews, site repairs. Priced from the Audit
-      before work begins, and capped at $10,000 for owner-led businesses.
+      before work begins. An owner-led business never pays more than {OWNER_LED_TOTAL_CAP} in total, Audit included. The
+      Retainer is separate.
     </p>
   </Section>
 
