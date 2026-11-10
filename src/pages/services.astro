@@ -4,7 +4,7 @@ import PageHeader from "../components/PageHeader.astro";
 import Section from "../components/Section.astro";
 import ClosingCTA from "../components/ClosingCTA.astro";
 import { capabilities, stages } from "../data/copy";
-import { ASSAY_CREDIT_DAYS } from "../config";
+import { ASSAY_CREDIT_DAYS, BUILD_CAPS } from "../config";
 
 type Fact = { term: string; text?: string; list?: string[] };
 
@@ -39,6 +39,11 @@ const facts: Record<string, Fact[]> = {
       text: "Smallest valuable piece first, then the next. Weekly check-ins. Documentation and team training included.",
     },
     { term: "Timeline", text: "Typically 4–12 weeks." },
+    {
+      term: "Fee",
+      text: "Priced from the Blueprint before work begins. Capped by the size of your firm:",
+      list: BUILD_CAPS.map((tier) => `${tier.size}: up to ${tier.cap}`),
+    },
   ],
   retainer: [
     { term: "Format", text: "A monthly retainer for stewardship and monitoring." },
@@ -70,7 +75,7 @@ const faqs = [
   },
   {
     q: "What does it cost?",
-    a: "The Map is a fixed fee agreed upfront. Builds are scoped and priced from the Blueprint, so you know the number before work begins.",
+    a: "The Map is a fixed fee agreed upfront. Builds are priced from the Blueprint and capped by firm size, from $10,000 for an owner-led business to $50,000 for a large firm. You know the number before work begins.",
   },
   {
     q: "How fast will we see results?",
