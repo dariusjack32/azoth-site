@@ -41,7 +41,10 @@ const facts: Record<string, Fact[]> = {
     { term: "Timeline", text: "Typically 4–12 weeks." },
     {
       term: "Fee",
-      text: "Priced from the Blueprint before work begins. Capped by the size of your firm:",
+      text:
+        ASSAY_CREDIT_DAYS > 0
+          ? "Priced from the Blueprint before work begins. Your Map fee is credited first. What remains is capped by the size of your firm:"
+          : "Priced from the Blueprint before work begins. Capped by the size of your firm:",
       list: BUILD_CAPS.map((tier) => `${tier.size}: up to ${tier.cap}`),
     },
   ],
