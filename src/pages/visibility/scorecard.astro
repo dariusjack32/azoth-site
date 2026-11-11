@@ -145,6 +145,16 @@ const schema = JSON.stringify({
       verdict.textContent = score === 0 ? "Tick what is true to see where you stand." : bands.find(([min]) => score >= min)[1];
     };
     form.addEventListener("change", update);
+    // One analytics event per visit, sent when they leave, with the final score.
+    let sent = false;
+    const report = () => {
+      const score = form.querySelectorAll("input:checked").length;
+      if (sent || !score || typeof window.gtag !== "function") return;
+      sent = true;
+      window.gtag("event", "scorecard_scored", { score, transport_type: "beacon" });
+    };
+    addEventListener("pagehide", report);
+    document.addEventListener("visibilitychange", () => document.visibilityState === "hidden" && report());
     update();
   })();
 </script>

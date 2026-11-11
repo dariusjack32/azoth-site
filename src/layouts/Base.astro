@@ -7,7 +7,7 @@ import displayFont from "@fontsource-variable/newsreader/files/newsreader-latin-
 
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
-import { BING_SITE_VERIFICATION, BRAND, EMAIL, FOUNDER_NAME, LEGAL_NAME, SITE_URL, SOCIAL_LINKEDIN_FOUNDER, SOCIAL_X } from "../config";
+import { BING_SITE_VERIFICATION, BRAND, GA_MEASUREMENT_ID, EMAIL, FOUNDER_NAME, LEGAL_NAME, SITE_URL, SOCIAL_LINKEDIN_FOUNDER, SOCIAL_X } from "../config";
 
 interface Props {
   title: string;
@@ -104,7 +104,31 @@ const organizationJson = JSON.stringify(organization).replace(/</g, "\\u003c");
     {isHome && <script is:inline type="application/ld+json" set:html={organizationJson} />}
     <slot name="head" />
 
-    {/* Analytics: none in v1. Add one privacy-friendly script here later (e.g. Plausible or Cloudflare Web Analytics). */}
+    {
+      GA_MEASUREMENT_ID && (
+        <>
+          <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} />
+          <script is:inline define:vars={{ id: GA_MEASUREMENT_ID }}>
+            window.dataLayer = window.dataLayer || [];
+            window.gtag = function () {
+              dataLayer.push(arguments);
+            };
+            gtag("js", new Date());
+            gtag("config", id);
+            // Named events for the actions that matter. Mark book_call and begin_checkout as key events in GA4.
+            document.addEventListener("click", (e) => {
+              const a = e.target.closest && e.target.closest("a[href]");
+              if (!a) return;
+              const href = a.href;
+              const where = { link_url: href, page_path: location.pathname };
+              if (href.includes("cal.com/azothandco")) gtag("event", "book_call", { ...where, link_text: a.textContent.trim().slice(0, 80) });
+              else if (href.includes("buy.stripe.com")) gtag("event", "begin_checkout", { ...where, link_text: a.textContent.trim().slice(0, 80) });
+              else if (href.startsWith("mailto:")) gtag("event", "contact_email", where);
+            });
+          </script>
+        </>
+      )
+    }
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>

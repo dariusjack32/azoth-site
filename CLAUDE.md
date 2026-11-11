@@ -22,7 +22,8 @@ Static Astro 7 site, deployed to GitHub Pages at azothandco.com. Design and copy
 - No contact forms. No login fields. The real portal will be a separate app at portal.azothandco.com.
 - Occult elements: only the seven in brief §3; everything else reads as plain, premium business design.
 - Hand-written CSS with tokens. No Tailwind, UI kits or component libraries.
-- JS: under 10 KB per page except /contact (Cal.com). Keep scripts `is:inline` and tiny.
+- JS: under 10 KB per page except /contact (Cal.com) and the Google Analytics tag (Denzel chose GA4, Nov 11 2026; ID in `src/config.ts`). Keep our own scripts `is:inline` and tiny.
+- Analytics events (Base.astro): `book_call` (Cal.com links), `begin_checkout` (Stripe links), `contact_email` (mailto), `scorecard_scored` (score on leaving /visibility/scorecard/). Keep /privacy accurate if tracking changes.
 - Accessibility: WCAG AA, axe-clean, visible gold focus rings, `prefers-reduced-motion` respected.
 
 <!-- harness:begin -->
