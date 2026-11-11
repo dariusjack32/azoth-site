@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Azoth & Co. — Invoice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0e0b;
+    --ash: #6f6b62;
+    --gold: #c8ae73;
+    --gold-deep: #a88f55;
+    --rule: rgba(168, 143, 85, 0.45);
+    --rule-faint: rgba(168, 143, 85, 0.22);
+    --paper: #ffffff;
+    --desk: #161512;
+    --font: "Newsreader", "Iowan Old Style", Palatino, Georgia, serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--desk);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Toolbar (screen only) */
+  .bar {
+    position: sticky; top: 0; z-index: 5;
+    display: flex; flex-wrap: wrap; gap: 0.6rem 1.25rem; align-items: center; justify-content: center;
+    padding: 0.85rem 1rem;
+    background: #000; border-bottom: 1px solid rgba(200, 174, 115, 0.25);
+    color: #ece8e0; font-size: 14px;
+  }
+  .bar strong { font-weight: 500; letter-spacing: 0.14em; font-size: 12px; text-transform: uppercase; color: var(--gold); }
+  .bar button, .bar select {
+    font: inherit; font-size: 13px; color: #ece8e0; background: transparent;
+    border: 1px solid rgba(200, 174, 115, 0.55); border-radius: 4px; padding: 0.4rem 0.8rem; cursor: pointer;
+  }
+  .bar button:hover, .bar select:hover { border-color: var(--gold); color: var(--gold); }
+  .bar button.primary { background: var(--gold); color: #000; border-color: var(--gold); }
+  .bar .hint { color: #8c887f; font-size: 12.5px; }
+
+  /* Sheet */
+  .sheet {
+    width: 8.5in; min-height: 11in; margin: 2rem auto 4rem;
+    background: var(--paper); padding: 0.75in 0.8in 0.7in;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    display: flex; flex-direction: column;
+  }
+  @media (max-width: 8.8in) { .sheet { width: 100%; min-height: 0; margin: 0; padding: 1.5rem 1.25rem 2rem; } }
+
+  [contenteditable] { outline: none; border-radius: 2px; transition: background 0.15s; }
+  @media screen {
+    [contenteditable]:hover { background: rgba(200, 174, 115, 0.10); }
+    [contenteditable]:focus { background: rgba(200, 174, 115, 0.16); box-shadow: 0 0 0 1px var(--gold); }
+  }
+  [contenteditable]:empty::before { content: attr(data-ph); color: #b3ada2; font-style: italic; }
+
+  .label { font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ash); font-weight: 500; }
+
+  /* Head */
+  .head { display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand svg { width: 52px; height: 52px; color: var(--gold-deep); }
+  .brand svg * { stroke-width: 1.25px; vector-effect: non-scaling-stroke; }
+  .wordmark { font-size: 21px; font-weight: 400; letter-spacing: 0.2em; line-height: 1; }
+  .wordmark .amp { color: var(--gold-deep); font-style: italic; letter-spacing: 0; padding: 0 0.12em; }
+  .tagline { margin-top: 6px; font-size: 12px; font-style: italic; color: var(--ash); letter-spacing: 0.02em; }
+  .title { text-align: right; }
+  .title h1 { margin: 0; font-weight: 300; font-size: 44px; line-height: 1; letter-spacing: -0.01em; }
+  .title .no { margin-top: 8px; font-size: 14px; color: var(--ash); }
+  .title .no span { color: var(--ink); }
+
+  .rule { height: 1px; background: var(--rule); margin: 28px 0 24px; border: 0; }
+
+  /* Parties + meta */
+  .parties { display: grid; grid-template-columns: 1fr 1fr 0.9fr; gap: 1.5rem; }
+  .parties .block div[contenteditable] { margin-top: 6px; white-space: pre-line; min-height: 1.5em; }
+  .meta dl { margin: 6px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 3px 12px; }
+  .meta dt { color: var(--ash); }
+  .meta dd { margin: 0; text-align: right; white-space: nowrap; }
+
+  /* Items */
+  table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+  thead th { text-align: left; padding: 0 0 10px; border-bottom: 1px solid var(--rule); }
+  thead th.num, td.num { text-align: right; }
+  tbody td { padding: 14px 0; border-bottom: 1px solid var(--rule-faint); vertical-align: top; }
+  td.desc { padding-right: 1.5rem; }
+  td.desc .name { font-size: 16px; font-weight: 500; }
+  td.desc .detail { margin-top: 3px; color: var(--ash); font-size: 13.5px; }
+  td.qty { width: 3.5rem; text-align: right; padding-right: 1.25rem; }
+  td.rate { width: 7rem; }
+  td.amt { width: 7rem; font-variant-numeric: tabular-nums; }
+  td.x { width: 1.5rem; text-align: right; }
+  .del { border: 0; background: none; color: #b3ada2; cursor: pointer; font-size: 16px; line-height: 1; padding: 0; }
+  .del:hover { color: #9a3b2e; }
+
+  /* Totals */
+  .totals { margin-left: auto; width: 46%; margin-top: 18px; }
+  .totals .row { display: flex; justify-content: space-between; padding: 5px 0; font-variant-numeric: tabular-nums; }
+  .totals .row span:first-child { color: var(--ash); }
+  .totals .due { margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--rule); align-items: baseline; }
+  .totals .due span:first-child { color: var(--ink); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 500; }
+  .totals .due span:last-child { font-size: 30px; font-weight: 400; }
+
+  /* Pay + notes */
+  .pay { margin-top: 34px; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .pay .box { border: 1px solid var(--rule); border-radius: 3px; padding: 14px 16px; }
+  .pay .box div[contenteditable] { margin-top: 6px; white-space: pre-line; }
+  .pay a { color: var(--ink); text-decoration-color: var(--gold); text-underline-offset: 3px; }
+
+  .foot { margin-top: auto; padding-top: 34px; }
+  .foot .thanks { font-style: italic; font-size: 17px; }
+  .foot .fine { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--rule-faint); display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; color: var(--ash); font-size: 11.5px; }
+
+  /* Print */
+  @page { size: letter; margin: 0; }
+  @media print {
+    body { background: #fff; }
+    .bar, .del, .screen-only { display: none !important; }
+    .sheet { margin: 0; box-shadow: none; width: 8.5in; min-height: 11in; }
+    [contenteditable]:empty::before { content: ""; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <strong>Invoice template</strong>
+  <select id="preset" aria-label="Add a service line">
+    <option value="">Add a service…</option>
+  </select>
+  <button type="button" id="addBlank">Add blank line</button>
+  <button type="button" id="newNo">Next invoice no.</button>
+  <button type="button" class="primary" id="printBtn">Save as PDF</button>
+  <span class="hint" id="hint">Click any text to edit it.</span>
+</div>
+
+<main class="sheet" id="sheet">
+  <header class="head">
+    <div>
+      <div class="brand">
+        <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" aria-hidden="true">
+          <circle cx="50" cy="50" r="46"></circle>
+          <path d="M50 4 L89.837 73 L10.163 73 Z"></path>
+          <path d="M23.442 50 H76.558"></path>
+        </svg>
+        <div>
+          <div class="wordmark">AZOTH<span class="amp">&amp;</span>CO.</div>
+          <div class="tagline">Operations, rebuilt.</div>
+        </div>
+      </div>
+    </div>
+    <div class="title">
+      <h1>Invoice</h1>
+      <div class="no">No. <span id="invNo" contenteditable="true" spellcheck="false">AZ-0001</span></div>
+    </div>
+  </header>
+
+  <hr class="rule">
+
+  <section class="parties">
+    <div class="block">
+      <div class="label">From</div>
+      <div contenteditable="true">Azoth &amp; Co. Consulting LLC
+Dallas–Fort Worth, Texas
+denzel@azothandco.com
+(469) 247-4270
+azothandco.com</div>
+    </div>
+    <div class="block">
+      <div class="label">Bill to</div>
+      <div contenteditable="true" data-ph="Client name
+Business name
+Email
+Address (optional)"></div>
+    </div>
+    <div class="block meta">
+      <div class="label">Details</div>
+      <dl>
+        <dt>Issued</dt><dd id="issued" contenteditable="true"></dd>
+        <dt>Due</dt><dd contenteditable="true">On receipt</dd>
+        <dt>Currency</dt><dd>USD</dd>
+      </dl>
+    </div>
+  </section>
+
+  <table aria-label="Invoice items">
+    <thead>
+      <tr>
+        <th class="label">Description</th>
+        <th class="label num">Qty</th>
+        <th class="label num">Rate</th>
+        <th class="label num">Amount</th>
+        <th class="screen-only"></th>
+      </tr>
+    </thead>
+    <tbody id="items"></tbody>
+  </table>
+
+  <div class="totals">
+    <div class="row"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+    <div class="row"><span contenteditable="true">Credit or discount</span><span>−$<span id="discount" contenteditable="true" spellcheck="false">0.00</span></span></div>
+    <div class="row due"><span>Amount due</span><span id="total">$0.00</span></div>
+  </div>
+
+  <section class="pay">
+    <div class="box">
+      <div class="label">How to pay</div>
+      <div contenteditable="true">Card or US bank account through Stripe:
+<a href="https://azothandco.com/pay/">azothandco.com/pay</a>
+Paid in full before work begins.</div>
+    </div>
+    <div class="box">
+      <div class="label">Notes</div>
+      <div contenteditable="true" data-ph="Scope, timing, or anything the client should know."></div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="thanks">Thank you. We start the day this is paid.</div>
+    <div class="fine">
+      <span>Azoth &amp; Co. Consulting LLC · Dallas–Fort Worth, Texas</span>
+      <span>Questions: denzel@azothandco.com</span>
+    </div>
+  </footer>
+</main>
+
+<script>
+(() => {
+  const PRESETS = [
+    { name: "Visibility Audit", detail: "Fixed-fee review of Google Business Profile, map rankings, website, listings and AI answers, ending in a ranked fix list and 90-day targets.", rate: 2500 },
+    { name: "Visibility fixes", detail: "Profile, listing, service-page and site fixes from the Visibility Audit, as scoped.", rate: 0 },
+    { name: "Visibility Retainer, Essentials", detail: "Monthly: profile and listing upkeep, review requests and replies, rank tracking, monthly report.", rate: 750 },
+    { name: "Visibility Retainer, Growth", detail: "Monthly: everything in Essentials, plus a new service or location page, content and seasonal offers.", rate: 1500 },
+    { name: "Map, Light", detail: "Fixed-fee process mapping ending in a written Blueprint. Credited toward a Build started within 60 days.", rate: 6500 },
+    { name: "Map, Full", detail: "Fixed-fee process mapping ending in a written Blueprint. Credited toward a Build started within 60 days.", rate: 18000 },
+    { name: "Build", detail: "Systems built from the Blueprint, as scoped.", rate: 0 },
+  ];
+  const $ = (s) => document.querySelector(s);
+  const items = $("#items");
+  const money = (n) => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const num = (el) => parseFloat((el.textContent || "").replace(/[^0-9.\-]/g, "")) || 0;
+
+  const sel = $("#preset");
+  PRESETS.forEach((p, i) => sel.add(new Option(p.name + (p.rate ? " — " + money(p.rate) : ""), i)));
+
+  function addRow(p = { name: "", detail: "", rate: 0 }, qty = 1) {
+    const tr = document.createElement("tr");
+    tr.innerHTML =
+      '<td class="desc"><div class="name" contenteditable="true" data-ph="Service"></div><div class="detail" contenteditable="true" data-ph="Short description"></div></td>' +
+      '<td class="qty num" contenteditable="true" spellcheck="false"></td>' +
+      '<td class="rate num" contenteditable="true" spellcheck="false"></td>' +
+      '<td class="amt num"></td>' +
+      '<td class="x screen-only"><button class="del" type="button" aria-label="Remove line">×</button></td>';
+    tr.querySelector(".name").textContent = p.name;
+    tr.querySelector(".detail").textContent = p.detail;
+    tr.querySelector(".qty").textContent = qty;
+    tr.querySelector(".rate").textContent = money(p.rate);
+    items.appendChild(tr);
+    recalc();
+  }
+
+  function recalc() {
+    let sub = 0;
+    items.querySelectorAll("tr").forEach((tr) => {
+      const amt = num(tr.querySelector(".qty")) * num(tr.querySelector(".rate"));
+      tr.querySelector(".amt").textContent = money(amt);
+      sub += amt;
+    });
+    const disc = num($("#discount"));
+    $("#subtotal").textContent = money(sub);
+    $("#total").textContent = money(Math.max(0, sub - disc));
+  }
+
+  sel.addEventListener("change", () => { if (sel.value !== "") addRow(PRESETS[sel.value]); sel.value = ""; });
+  $("#addBlank").addEventListener("click", () => addRow());
+  items.addEventListener("click", (e) => { if (e.target.closest(".del")) { e.target.closest("tr").remove(); recalc(); } });
+  document.addEventListener("input", recalc);
+  // Tidy money cells when you leave them.
+  document.addEventListener("focusout", (e) => {
+    if (e.target.matches && e.target.matches(".rate")) e.target.textContent = money(num(e.target));
+    if (e.target.id === "discount") e.target.textContent = num(e.target).toFixed(2);
+    recalc();
+  });
+  // Plain-text paste only.
+  document.addEventListener("paste", (e) => {
+    if (!e.target.closest || !e.target.closest("[contenteditable]")) return;
+    e.preventDefault();
+    document.execCommand("insertText", false, (e.clipboardData || window.clipboardData).getData("text"));
+  });
+
+  $("#newNo").addEventListener("click", () => {
+    const el = $("#invNo"); const m = el.textContent.match(/^(.*?)(\d+)\s*$/);
+    if (m) el.textContent = m[1] + String(+m[2] + 1).padStart(m[2].length, "0");
+  });
+
+  $("#issued").textContent = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+
+  $("#printBtn").addEventListener("click", () => {
+    try { window.print(); }
+    catch (e) {}
+    $("#hint").textContent = "If no print dialog opened, open the invoice file on your Mac and press Cmd+P → Save as PDF.";
+  });
+
+  addRow(PRESETS[0]);
+})();
+</script>
+</body>
+</html>
