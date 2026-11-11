@@ -228,6 +228,66 @@ button {
   color: var(--ash);
 }
 
+/* Long-form guide copy (/visibility/* guides). */
+.prose {
+  max-width: var(--measure);
+  text-wrap: pretty;
+}
+
+.prose > * + * {
+  margin-top: 1.25em;
+}
+
+.prose h2 {
+  margin-top: 2.75em;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--step-2);
+  line-height: 1.12;
+  letter-spacing: -0.004em;
+  text-wrap: balance;
+}
+
+.prose h3 {
+  margin-top: 2em;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--step-1);
+  line-height: 1.25;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.25em;
+}
+
+.prose ul {
+  list-style: disc;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose li + li {
+  margin-top: 0.5em;
+}
+
+.prose ul li::marker {
+  color: var(--gold);
+}
+
+.prose strong {
+  font-weight: 600;
+}
+
+.prose a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-underline-offset: 0.2em;
+}
+
 /* ---------- Links & buttons ---------- */
 
 .btn {

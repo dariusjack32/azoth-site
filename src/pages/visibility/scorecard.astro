@@ -1,0 +1,227 @@
+---
+/**
+ * /visibility/scorecard/ — free 20-point self-check. Nothing is sent anywhere: the score is counted in the page.
+ * Works without JS as a plain checklist.
+ */
+import Base from "../../layouts/Base.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import Section from "../../components/Section.astro";
+import Button from "../../components/Button.astro";
+import ClosingCTA from "../../components/ClosingCTA.astro";
+import { BRAND, CAL_LINK, SITE_URL, STRIPE_LINK_AUDIT } from "../../config";
+
+const groups = [
+  {
+    name: "Google Business Profile",
+    items: [
+      "My primary category is the most specific one for my main service",
+      "Every service I offer is listed on the profile, with a short description",
+      "My hours, phone, website link and booking link are correct",
+      "I have added my own photos in the last 30 days",
+      "I posted an update or offer in the last 30 days",
+    ],
+  },
+  {
+    name: "Reviews",
+    items: [
+      "I received at least one new Google review in the last two weeks",
+      "I reply to every review, good and bad",
+      "I ask every satisfied customer for a review with a direct link",
+      "I have reviews on at least one site besides Google",
+    ],
+  },
+  {
+    name: "Website",
+    items: [
+      "Each of my core services has its own page",
+      "My pages say which towns I serve, in plain words",
+      "My site loads in under three seconds on a phone",
+      "My phone number or booking button is visible without scrolling on a phone",
+    ],
+  },
+  {
+    name: "Listings",
+    items: [
+      "My business name, address and phone are identical on my site, Google and the major directories",
+      "I am listed on the directories that matter in my trade",
+      "I have been mentioned by at least one local source I do not control (chamber, news, supplier)",
+    ],
+  },
+  {
+    name: "Search and AI answers",
+    items: [
+      "I appear in the map’s top three for my main service in my own town",
+      "I appear on page one for my main service plus my town",
+      "ChatGPT names my business when asked for the best in my trade in my town",
+      "Google’s AI answer mentions my business for that search",
+    ],
+  },
+];
+const total = groups.reduce((n, g) => n + g.items.length, 0);
+
+const schema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Visibility Scorecard",
+  url: new URL("/visibility/scorecard/", SITE_URL).href,
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Any",
+  isAccessibleForFree: true,
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  provider: { "@type": "ProfessionalService", name: BRAND, url: SITE_URL },
+  description: "A free 20-point local search and AI visibility self-check for owner-led businesses.",
+}).replace(/</g, "\\u003c");
+---
+
+<Base
+  title="Free Local SEO & AI Visibility Scorecard (20-Point Check) — Azoth & Co."
+  description="Score how findable your business is on Google, the map and AI answers in ten minutes. 20 yes-or-no checks, no email required. Built for owner-led businesses in Dallas–Fort Worth."
+>
+  <script is:inline type="application/ld+json" set:html={schema} slot="head" />
+
+  <PageHeader
+    label="Visibility · Scorecard"
+    title="How findable is your business?"
+    sub={`${total} yes-or-no checks. Ten minutes. Nothing leaves this page: no email, no form.`}
+  />
+
+  <Section>
+    <form class="score" id="scorecard" aria-describedby="score-help" onsubmit="return false">
+      <p id="score-help" class="muted score__help">
+        Tick only what is true today. For the last section, search from a phone in your own town, signed out.
+      </p>
+      {
+        groups.map((group, gi) => (
+          <fieldset class="score__group">
+            <legend class="label">{`${gi + 1}. ${group.name}`}</legend>
+            <ul role="list">
+              {group.items.map((item, ii) => (
+                <li>
+                  <label class="score__item">
+                    <input type="checkbox" name={`q${gi}-${ii}`} />
+                    <span>{item}</span>
+                  </label>
+                </li>
+              ))}
+            </ul>
+          </fieldset>
+        ))
+      }
+    </form>
+
+    <div class="score__result" aria-live="polite">
+      <p class="label">Your score</p>
+      <p class="score__number"><span id="score-n">0</span> / {total}</p>
+      <p class="lede" id="score-verdict">Tick what is true to see where you stand.</p>
+    </div>
+
+    <div class="score__actions">
+      {STRIPE_LINK_AUDIT ? <Button href={STRIPE_LINK_AUDIT} rel="noopener">Get the full Audit, $2,500</Button> : null}
+      <a class="link" href={CAL_LINK}>Or talk it through in 15 minutes</a>
+    </div>
+    <p class="muted score__note">
+      The <a class="text-link" href="/visibility/#audit">Visibility Audit</a> checks all of this for you, across every
+      town you serve, against the three competitors who show up instead of you, and ends in a ranked fix list.
+    </p>
+  </Section>
+
+  <ClosingCTA />
+</Base>
+
+<script is:inline define:vars={{ total }}>
+  (() => {
+    const form = document.getElementById("scorecard");
+    const n = document.getElementById("score-n");
+    const verdict = document.getElementById("score-verdict");
+    const bands = [
+      [17, "Strong. You are likely in the running. The gains now are in the towns and services where you are not yet first."],
+      [11, "Uneven. Customers find you for some searches and a competitor for others. A ranked fix list closes the gaps fastest."],
+      [6, "Leaking. Most customers searching for what you do are choosing someone else, usually without you ever knowing."],
+      [0, "Mostly invisible. The good news: the first fixes are the cheapest and show quickest."],
+    ];
+    const update = () => {
+      const score = form.querySelectorAll("input:checked").length;
+      n.textContent = score;
+      verdict.textContent = score === 0 ? "Tick what is true to see where you stand." : bands.find(([min]) => score >= min)[1];
+    };
+    form.addEventListener("change", update);
+    update();
+  })();
+</script>
+
+<style>
+  .score__help {
+    max-width: 52ch;
+    margin-bottom: 2.5rem;
+  }
+
+  .score__group {
+    margin: 0 0 2.5rem;
+    padding: 0;
+    border: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .score__group legend {
+    padding-top: 1.25rem;
+    float: left;
+    width: 100%;
+    margin-bottom: 0.75rem;
+  }
+
+  .score__group ul {
+    clear: both;
+  }
+
+  .score__item {
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+    max-width: var(--measure);
+    padding-block: 0.7rem;
+    border-bottom: 1px solid var(--rule-faint);
+    cursor: pointer;
+  }
+
+  .score__item input {
+    flex: none;
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-top: 0.2rem;
+    accent-color: var(--gold);
+  }
+
+  .score__result {
+    position: sticky;
+    bottom: 0;
+    margin-top: 1rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--gold);
+    background: var(--obsidian);
+  }
+
+  .score__result .lede {
+    font-size: var(--step-0);
+  }
+
+  .score__number {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: 1.1;
+    margin-block: 0.25rem 0.4rem;
+  }
+
+  .score__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 2rem;
+    margin-top: 2rem;
+  }
+
+  .score__note {
+    max-width: 52ch;
+    margin-top: 1.5rem;
+    font-size: 0.9375rem;
+  }
+</style>

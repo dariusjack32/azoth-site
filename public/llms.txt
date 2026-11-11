@@ -16,6 +16,11 @@ Clients: investment and professional firms, growing companies, and owner-led bus
 - [Home](https://azothandco.com/): positioning, process, FAQ
 - [Services](https://azothandco.com/services/): Map, Build, Retainer in detail
 - [Visibility](https://azothandco.com/visibility/): local SEO and AI search visibility for owner-led DFW businesses — Visibility Audit ($2,500), fixes (capped at $10,000), Visibility Retainer ($750 or $1,500 a month)
+- [Visibility Scorecard](https://azothandco.com/visibility/scorecard/): free 20-point self-check of local search and AI visibility
+- [AI search guide](https://azothandco.com/visibility/ai-search/): how ChatGPT, Perplexity and Google's AI answers choose which local businesses to recommend
+- [Google Business Profile checklist](https://azothandco.com/visibility/google-business-profile/): field-by-field, in order of impact
+- [Med spas](https://azothandco.com/visibility/med-spas/): search visibility for med spas in Dallas–Fort Worth
+- [Home services](https://azothandco.com/visibility/home-services/): local SEO for HVAC, plumbing, roofing and electrical companies in DFW
 - [About](https://azothandco.com/about/): who we are and how we work
 - [Contact](https://azothandco.com/contact/): book a 15- or 30-minute call
 
