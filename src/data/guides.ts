@@ -25,4 +25,19 @@ export const GUIDES = [
     title: "Local SEO for home service businesses in DFW",
     blurb: "HVAC, plumbing, roofing, electrical: winning the map in a service area, not just at an address.",
   },
+  {
+    href: "/visibility/dental-practices/",
+    title: "Search visibility for dental practices in Dallas–Fort Worth",
+    blurb: "For dentists and orthodontists: how patients choose a practice now, and where most lose them.",
+  },
+  {
+    href: "/visibility/eye-care/",
+    title: "Search visibility for eye care practices in Dallas–Fort Worth",
+    blurb: "For optometrists: winning the map against the chains on the searches they do not serve well.",
+  },
+  {
+    href: "/visibility/chiropractors/",
+    title: "Search visibility for chiropractors in Dallas–Fort Worth",
+    blurb: "How a patient in pain picks an office, and how to be one of the first three she sees.",
+  },
 ];
